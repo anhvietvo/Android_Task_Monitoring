@@ -1,0 +1,12 @@
+{
+  "name": "Android_Task_Monitoring",
+  "displayName": "Android_Task_Monitoring",
+  "expo": {
+    "name": "Android_Task_Monitoring",
+    "slug": "Android_Task_Monitoring",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
