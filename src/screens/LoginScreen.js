@@ -14,7 +14,7 @@ import {
 import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 
-const LoginScreen = () => {
+const LoginScreen = ({ navigation }) => {
   return (
     <KeyboardAvoidingView behavior={'position'} style={styles.container}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -46,7 +46,7 @@ const LoginScreen = () => {
           </TouchableOpacity>
           <View style={styles.signupContainer}>
             <Text>Don't have account? </Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
               <Text style={styles.text}>Sign up</Text>
             </TouchableOpacity>
           </View>
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     //marginHorizontal: 15,
     marginBottom: 7,
     borderWidth: 2,
-    borderRadius: 7,
+    borderRadius: 20,
     backgroundColor: "white",
     borderColor: "#2E3191",
   },
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     flex: 1,
     //borderRadius: 7,
     paddingHorizontal: 7,
-    fontSize: 20,
+    fontSize: 18,
     //backgroundColor:'white',
     //borderColor: '#2E3191'
   },
