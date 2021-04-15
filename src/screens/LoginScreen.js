@@ -6,9 +6,9 @@ import {
   TextInput,
   Image,
   TouchableOpacity,
-  KeyboardAvoidingView,
   TouchableWithoutFeedback,
-  Keyboard,
+  KeyboardAvoidingView,
+  Keyboard
 } from "react-native";
 
 import { Feather } from "@expo/vector-icons";
@@ -16,10 +16,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 const LoginScreen = () => {
   return (
-    <KeyboardAvoidingView
-      behavior={"padding"}
-      style={styles.container}
-    >
+    <KeyboardAvoidingView behavior={'position'} style={styles.container}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.background}>
           <Image style={styles.img} source={require("../../assets/logo.png")} />
@@ -28,7 +25,7 @@ const LoginScreen = () => {
             <TextInput
               style={styles.input}
               placeholder="username"
-              autoCapitalize={false}
+              autoCapitalize={"none"}
               autoCorrect={false}
             />
           </View>
@@ -38,7 +35,7 @@ const LoginScreen = () => {
               style={styles.input}
               placeholder="password"
               secureTextEntry={true}
-              autoCapitalize={false}
+              autoCapitalize={"none"}
               autoCorrect={false}
             />
           </View>
@@ -61,11 +58,12 @@ const LoginScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    //flex: 1,
+    //backgroundColor: 'gray',
+    paddingBottom: 60,
   },
   background: {
     //flex: 1,
-    justifyContent: 'space-around',
     paddingVertical: 20,
     marginHorizontal: 15,
   },
