@@ -1,58 +1,91 @@
 import React from "react";
-import { Text, View, StyleSheet, TextInput, Image, TouchableOpacity } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  TextInput,
+  Image,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from "react-native";
 
-import { Feather } from '@expo/vector-icons';
-import { Ionicons } from '@expo/vector-icons';
+import { Feather } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 
 const LoginScreen = () => {
   return (
-    <View style={styles.background}>
-      <Image style={styles.img} source={require('../../assets/logo.png')}/>
-      <View style={styles.inputContainer}>
-        <Feather name="user" style={styles.icon} color="#2E3191" />
-        <TextInput style={styles.input} placeholder="username" autoCapitalize={false} autoCorrect={false}/>
-      </View>
-      <View style={styles.inputContainer}>
-        <Ionicons name="key-outline" style={styles.icon} color="#2E3191" />
-        <TextInput style={styles.input} placeholder="password" secureTextEntry={true} autoCapitalize={false} autoCorrect={false}/>
-      </View>
-      <TouchableOpacity style={styles.btn}>
-        <Text style={[styles.text, {fontSize: 20, alignSelf: 'center'}]}>Log in</Text>
-      </TouchableOpacity>
-      <View style={styles.signupContainer}>
-        <Text>Don't have account? </Text>
-        <TouchableOpacity>
-          <Text style={styles.text}>Sign up</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  )
+    <KeyboardAvoidingView
+      behavior={"padding"}
+      style={styles.container}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.background}>
+          <Image style={styles.img} source={require("../../assets/logo.png")} />
+          <View style={styles.inputContainer}>
+            <Feather name="user" style={styles.icon} color="#2E3191" />
+            <TextInput
+              style={styles.input}
+              placeholder="username"
+              autoCapitalize={false}
+              autoCorrect={false}
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <Ionicons name="key-outline" style={styles.icon} color="#2E3191" />
+            <TextInput
+              style={styles.input}
+              placeholder="password"
+              secureTextEntry={true}
+              autoCapitalize={false}
+              autoCorrect={false}
+            />
+          </View>
+          <TouchableOpacity style={styles.btn}>
+            <Text style={[styles.text, { fontSize: 20, alignSelf: "center" }]}>
+              Log in
+            </Text>
+          </TouchableOpacity>
+          <View style={styles.signupContainer}>
+            <Text>Don't have account? </Text>
+            <TouchableOpacity>
+              <Text style={styles.text}>Sign up</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
+  );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
   background: {
-    //justifyContent: 'center', 
-    flex:1, 
+    //flex: 1,
+    justifyContent: 'space-around',
     paddingVertical: 20,
     marginHorizontal: 15,
   },
   img: {
-    alignSelf: 'center',
+    alignSelf: "center",
     height: 300,
     width: 300,
-    resizeMode: 'contain',
+    //resizeMode: "contain",
     marginBottom: 30,
   },
   inputContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     //borderWidth: 1,
     //backgroundColor:'blue',
     //marginHorizontal: 15,
     marginBottom: 7,
     borderWidth: 2,
     borderRadius: 7,
-    backgroundColor: 'white',
-    borderColor: '#2E3191'
+    backgroundColor: "white",
+    borderColor: "#2E3191",
   },
   input: {
     //borderWidth:2,
@@ -67,28 +100,28 @@ const styles = StyleSheet.create({
   icon: {
     fontSize: 40,
     marginHorizontal: 10,
-    alignSelf: 'center',
+    alignSelf: "center",
   },
   btn: {
     //width: 120,
     height: 40,
     marginTop: 15,
-    alignSelf: 'stretch',
-    justifyContent: 'center',
+    alignSelf: "stretch",
+    justifyContent: "center",
     borderRadius: 7,
     borderWidth: 2,
-    backgroundColor:'#edf6ff',
-    borderColor: '#2E3191'
+    backgroundColor: "#edf6ff",
+    borderColor: "#2E3191",
   },
   signupContainer: {
-    flexDirection: 'row',
-    alignSelf: 'center',
+    flexDirection: "row",
+    alignSelf: "center",
     marginTop: 15,
   },
   text: {
-    fontWeight: 'bold', 
-    color: '#171b84',
-  }
-})
+    fontWeight: "bold",
+    color: "#171b84",
+  },
+});
 
 export default LoginScreen;
