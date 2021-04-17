@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Text,
   View,
@@ -8,15 +8,18 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
-  Keyboard
+  Keyboard,
 } from "react-native";
 
+import axios from "../api/axios";
 import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 
 const LoginScreen = ({ navigation }) => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   return (
-    <KeyboardAvoidingView behavior={'position'} style={styles.container}>
+    <KeyboardAvoidingView behavior={"position"} style={styles.container}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.background}>
           <Image style={styles.img} source={require("../../assets/logo.png")} />
@@ -27,6 +30,8 @@ const LoginScreen = ({ navigation }) => {
               placeholder="username"
               autoCapitalize={"none"}
               autoCorrect={false}
+              value={username}
+              onChangeText={(val) => setUsername(val)}
             />
           </View>
           <View style={styles.inputContainer}>
@@ -37,9 +42,22 @@ const LoginScreen = ({ navigation }) => {
               secureTextEntry={true}
               autoCapitalize={"none"}
               autoCorrect={false}
+              value={password}
+              onChangeText={(val) => setPassword(val)}
             />
           </View>
-          <TouchableOpacity style={styles.btn}>
+          <TouchableOpacity
+            style={styles.btn}
+            onPress={async () => {
+              try {
+                const response = await axios.post("/signin", {
+                  username,
+                  password,
+                })
+                console.log(response.data);
+              } catch (err) {console.log(err);}
+            }}
+          >
             <Text style={[styles.text, { fontSize: 20, alignSelf: "center" }]}>
               Log in
             </Text>
