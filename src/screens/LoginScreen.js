@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   Text,
   View,
@@ -11,13 +11,18 @@ import {
   Keyboard,
 } from "react-native";
 
-import axios from "../api/axios";
 import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
+import { Context as AuthContext } from "../context/AuthContext";
 
 const LoginScreen = ({ navigation }) => {
+  const { state, signin } = useContext(AuthContext);
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  console.log(state);
+
   return (
     <KeyboardAvoidingView behavior={"position"} style={styles.container}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -48,20 +53,13 @@ const LoginScreen = ({ navigation }) => {
           </View>
           <TouchableOpacity
             style={styles.btn}
-            onPress={async () => {
-              try {
-                const response = await axios.post("/signin", {
-                  username,
-                  password,
-                })
-                console.log(response.data);
-              } catch (err) {console.log(err);}
-            }}
+            onPress={() => signin({ username, password })}
           >
             <Text style={[styles.text, { fontSize: 20, alignSelf: "center" }]}>
               Log in
             </Text>
           </TouchableOpacity>
+          {state.errorMessage ? <Text style={{fontSize: 16, color: "red"}}>{state.errorMessage}</Text> : null}
           <View style={styles.signupContainer}>
             <Text>Don't have account? </Text>
             <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
