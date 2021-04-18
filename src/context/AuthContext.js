@@ -1,7 +1,8 @@
 import createDataContext from "./createDataContext";
 import axios from "../api/axios";
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { navigate } from "../navigationRef";
 
 const authReducer = (state, action) => {
   switch (action.type) {
@@ -37,6 +38,8 @@ const signup = (dispatch) => async ({ fullname, username, password }) => {
     // Store jwt to device
     await AsyncStorage.setItem("token", res.data.token);
     dispatch({ type: "signup", payload: res.data.token });
+
+    navigate("Personal");
   } catch (err) {
     dispatch({ type: "add_err", payload: "Something went wrong with sign up" });
   }

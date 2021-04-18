@@ -16,7 +16,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 import { Context as AuthContext } from "../context/AuthContext";
 
-const SignupScreen = () => {
+const SignupScreen = ({ navigation }) => {
   const [fullname, setFullname] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -88,6 +88,13 @@ const SignupScreen = () => {
             </Text>
           </TouchableOpacity>
           {state.errorMessage ? <Text style={{fontSize: 16, color: "red"}}>{state.errorMessage}</Text> : null}
+
+          <View style={styles.loginContainer}>
+            <Text>Already have account? </Text>
+            <TouchableOpacity onPress={() => navigation.navigate("Signin")}>
+              <Text style={{fontWeight: "bold", color: "#171b84"}}>Log in</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
@@ -158,6 +165,11 @@ const styles = StyleSheet.create({
     //borderColor: 'red',
     justifyContent: "center",
   },
+  loginContainer: {
+    flexDirection: "row",
+    alignSelf: "center",
+    marginTop: 15,
+  }
 });
 
 export default SignupScreen;
