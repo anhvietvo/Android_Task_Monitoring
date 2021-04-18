@@ -14,8 +14,8 @@ import { Provider as AuthProvider } from "./src/context/AuthContext";
 
 const switchNavigator = createSwitchNavigator({
   loginFlow: createStackNavigator({
-    Signin: LoginScreen,
     Signup: SignupScreen,
+    Signin: LoginScreen,
   }),
   mainFlow: createBottomTabNavigator({
     Personal: PersonalScreen,

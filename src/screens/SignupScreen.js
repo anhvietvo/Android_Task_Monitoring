@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   Text,
   View,
@@ -14,12 +14,17 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 
+import { Context as AuthContext } from "../context/AuthContext";
+
 const SignupScreen = () => {
   const [fullname, setFullname] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  const { state, signup } = useContext(AuthContext);
+
+  console.log(state);
   return (
     <KeyboardAvoidingView behavior={"position"} style={styles.keyboardAvoid}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -77,11 +82,12 @@ const SignupScreen = () => {
               onChangeText={setConfirmPassword}
             />
           </View>
-          <TouchableOpacity style={styles.btn} onPress={() => {}}>
+          <TouchableOpacity style={styles.btn} onPress={() => {signup({ fullname, username, password })}}>
             <Text style={[styles.text, { fontWeight: "bold", fontSize: 20 }]}>
               CREATE
             </Text>
           </TouchableOpacity>
+          {state.errorMessage ? <Text style={{fontSize: 16, color: "red"}}>{state.errorMessage}</Text> : null}
         </View>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
