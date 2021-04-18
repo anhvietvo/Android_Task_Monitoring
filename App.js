@@ -1,14 +1,16 @@
 import React from "react";
 
-import { createAppContainer, createSwitchNavigator } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
-import { createBottomTabNavigator } from 'react-navigation-tabs';
+import { createAppContainer, createSwitchNavigator } from "react-navigation";
+import { createStackNavigator } from "react-navigation-stack";
+import { createBottomTabNavigator } from "react-navigation-tabs";
 
 import LoginScreen from "./src/screens/LoginScreen";
 import InfoScreen from "./src/screens/InfoScreen";
 import PersonalScreen from "./src/screens/PersonalScreen";
 import TeamScreen from "./src/screens/TeamScreen";
 import SignupScreen from "./src/screens/SignupScreen";
+
+import { Provider as AuthProvider } from "./src/context/AuthContext";
 
 const switchNavigator = createSwitchNavigator({
   loginFlow: createStackNavigator({
@@ -22,4 +24,12 @@ const switchNavigator = createSwitchNavigator({
   }),
 });
 
-export default createAppContainer(switchNavigator);
+const App = createAppContainer(switchNavigator);
+
+export default () => {
+  return (
+    <AuthProvider>
+      <App />
+    </AuthProvider>
+  );
+};

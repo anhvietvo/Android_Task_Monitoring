@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Text,
   View,
@@ -15,6 +15,11 @@ import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 
 const SignupScreen = () => {
+  const [fullname, setFullname] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
   return (
     <KeyboardAvoidingView behavior={"position"} style={styles.keyboardAvoid}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -33,6 +38,8 @@ const SignupScreen = () => {
               placeholder="Full name"
               autoCapitalize="words"
               autoCorrect={false}
+              value={fullname}
+              onChangeText={setFullname}
             />
           </View>
           <View style={styles.inputContainer}>
@@ -42,6 +49,8 @@ const SignupScreen = () => {
               placeholder="Username"
               autoCapitalize="none"
               autoCorrect={false}
+              value={username}
+              onChangeText={setUsername}
             />
           </View>
           <View style={styles.inputContainer}>
@@ -52,6 +61,8 @@ const SignupScreen = () => {
               autoCapitalize="none"
               secureTextEntry={true}
               autoCorrect={false}
+              value={password}
+              onChangeText={setPassword}
             />
           </View>
           <View style={styles.inputContainer}>
@@ -62,9 +73,11 @@ const SignupScreen = () => {
               autoCapitalize="none"
               secureTextEntry={true}
               autoCorrect={false}
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
             />
           </View>
-          <TouchableOpacity style={styles.btn}>
+          <TouchableOpacity style={styles.btn} onPress={() => {}}>
             <Text style={[styles.text, { fontWeight: "bold", fontSize: 20 }]}>
               CREATE
             </Text>
@@ -75,11 +88,17 @@ const SignupScreen = () => {
   );
 };
 
+// Force navigator don't shown header
+SignupScreen.navigationOptions = () => {
+  return {
+    headerShown: false,
+  };
+};
+
 const styles = StyleSheet.create({
   container: {
-    //flex: 1,
     paddingHorizontal: 20,
-    marginTop: 15,
+    marginTop: 70,
   },
   header: {
     fontSize: 25,
@@ -127,7 +146,11 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   keyboardAvoid: {
-    paddingBottom: 105,
+    paddingBottom: 50,
+    //flex: 1,
+    //borderWidth: 10,
+    //borderColor: 'red',
+    justifyContent: "center",
   },
 });
 
