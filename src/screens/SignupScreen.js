@@ -10,6 +10,8 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 
+import { NavigationEvents } from "react-navigation";
+
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
@@ -22,13 +24,14 @@ const SignupScreen = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const { state, signup } = useContext(AuthContext);
+  const { state, signup, clearErrorMessage } = useContext(AuthContext);
 
-  console.log(state);
+  //console.log(state);
   return (
     <KeyboardAvoidingView behavior={"position"} style={styles.keyboardAvoid}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
+          <NavigationEvents onWillFocus={clearErrorMessage} />
           <Text style={[styles.text, styles.header]}>Let's Get Started!</Text>
           <Text style={[styles.text, styles.subHeader]}>
             Create an account to get all features
@@ -82,17 +85,27 @@ const SignupScreen = ({ navigation }) => {
               onChangeText={setConfirmPassword}
             />
           </View>
-          <TouchableOpacity style={styles.btn} onPress={() => {signup({ fullname, username, password })}}>
+          <TouchableOpacity
+            style={styles.btn}
+            onPress={() => {
+              signup({ fullname, username, password });
+            }}
+          >
             <Text style={[styles.text, { fontWeight: "bold", fontSize: 20 }]}>
               CREATE
             </Text>
           </TouchableOpacity>
-          {state.errorMessage ? <Text style={{fontSize: 16, color: "red"}}>{state.errorMessage}</Text> : null}
-
+          {state.errorMessage ? (
+            <Text style={{ fontSize: 16, color: "red" }}>
+              {state.errorMessage}
+            </Text>
+          ) : null}
           <View style={styles.loginContainer}>
             <Text>Already have account? </Text>
             <TouchableOpacity onPress={() => navigation.navigate("Signin")}>
-              <Text style={{fontWeight: "bold", color: "#171b84"}}>Log in</Text>
+              <Text style={{ fontWeight: "bold", color: "#171b84" }}>
+                Log in
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -169,7 +182,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignSelf: "center",
     marginTop: 15,
-  }
+  },
 });
 
 export default SignupScreen;

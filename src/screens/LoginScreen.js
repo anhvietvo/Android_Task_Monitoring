@@ -11,22 +11,27 @@ import {
   Keyboard,
 } from "react-native";
 
+import { NavigationEvents } from "react-navigation";
+
 import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { Context as AuthContext } from "../context/AuthContext";
 
 const LoginScreen = ({ navigation }) => {
-  const { state, signin } = useContext(AuthContext);
+  const { state, signin, clearErrorMessage } = useContext(
+    AuthContext
+  );
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  console.log(state);
+  //console.log(state);
 
   return (
-    <KeyboardAvoidingView behavior={"position"} style={styles.container}>
+    <KeyboardAvoidingView behavior={"position"}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.background}>
+          <NavigationEvents onWillFocus={clearErrorMessage} />
           <Image style={styles.img} source={require("../../assets/logo.png")} />
           <View style={styles.inputContainer}>
             <Feather name="user" style={styles.icon} color="#2E3191" />
@@ -59,7 +64,11 @@ const LoginScreen = ({ navigation }) => {
               Log in
             </Text>
           </TouchableOpacity>
-          {state.errorMessage ? <Text style={{fontSize: 16, color: "red"}}>{state.errorMessage}</Text> : null}
+          {state.errorMessage ? (
+            <Text style={{ fontSize: 16, color: "red" }}>
+              {state.errorMessage}
+            </Text>
+          ) : null}
           <View style={styles.signupContainer}>
             <Text>Don't have account? </Text>
             <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
@@ -72,16 +81,24 @@ const LoginScreen = ({ navigation }) => {
   );
 };
 
+LoginScreen.navigationOptions = () => {
+  return {
+    headerShown: false,
+  };
+};
+
 const styles = StyleSheet.create({
-  container: {
-    //flex: 1,
-    //backgroundColor: 'gray',
-    paddingBottom: 60,
-  },
+  //container: {
+  ////flex: 1,
+  //backgroundColor: 'gray',
+  ////marginTop: 60,
+  ////paddingBottom: 30,
+  //},
   background: {
     //flex: 1,
-    paddingVertical: 20,
+    //paddingVertical: 20,
     marginHorizontal: 15,
+    paddingTop: 70,
   },
   img: {
     alignSelf: "center",
