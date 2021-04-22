@@ -15,11 +15,11 @@ import { Provider as AuthProvider } from "./src/context/AuthContext";
 import { setNavigator } from "./src/navigationRef";
 
 const switchNavigator = createSwitchNavigator({
-  resolveAuth: ResolveAuthScreen,
-  loginFlow: createStackNavigator({
-    Signin: LoginScreen,
-    Signup: SignupScreen,
-  }),
+  //resolveAuth: ResolveAuthScreen,
+  //loginFlow: createStackNavigator({
+    //Signin: LoginScreen,
+    //Signup: SignupScreen,
+  //}),
   mainFlow: createBottomTabNavigator({
     Personal: PersonalScreen,
     Team: TeamScreen,
