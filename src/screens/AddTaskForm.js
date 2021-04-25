@@ -1,4 +1,4 @@
-import React, { useState, useReducer } from "react";
+import React, { useReducer } from "react";
 import { Text, View, StyleSheet } from "react-native";
 
 import { Calendar } from "react-native-calendars";
@@ -8,9 +8,24 @@ import { Input, Switch, Button } from "react-native-elements";
 import { Fontisto } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "switch_day":
+      return state.timeSwitch
+        ? { daySwitch: false, timeSwitch: false }
+        : { ...state, daySwitch: !state.daySwitch };
+    case "switch_time":
+      return state.daySwitch ? { ...state, timeSwitch: !state.timeSwitch } : state;
+    default:
+      return state;
+  }
+};
+
 const AddTaskForm = () => {
-  const [daySwitch, setDaySwitch] = useState(false);
-  const [timeSwitch, setTimeSwitch] = useState(false);
+  const [state, dispatch] = useReducer(reducer, {
+    daySwitch: false,
+    timeSwitch: false,
+  });
 
   return (
     <>
@@ -22,24 +37,20 @@ const AddTaskForm = () => {
           <Fontisto name="date" style={styles.icon} />
           <Text style={styles.txt}>Date</Text>
           <Switch
-            value={daySwitch}
-            onValueChange={() => setDaySwitch(!daySwitch)}
+            value={state.daySwitch}
+            onValueChange={() => dispatch({ type: "switch_day" })}
           />
         </View>
-        {daySwitch && !timeSwitch && <Calendar />}
+        {state.daySwitch && !state.timeSwitch && <Calendar />}
         <View style={styles.switchContainer}>
           <Ionicons name="time-outline" style={styles.icon} />
           <Text style={styles.txt}>Time</Text>
           <Switch
-            value={timeSwitch}
-            onValueChange={() => {
-              if (daySwitch) {
-                setTimeSwitch(!timeSwitch);
-              }
-            }}
+            value={state.timeSwitch}
+            onValueChange={() => dispatch({ type: "switch_time" })}
           />
         </View>
-        {timeSwitch && (
+        {state.timeSwitch && (
           <DateTimePicker
             style={{ marginBottom: 20, alignSelf: "flex-end", width: 70 }}
             mode="time"
