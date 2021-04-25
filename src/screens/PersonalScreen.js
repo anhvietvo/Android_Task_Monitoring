@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Alert,
   StyleSheet,
@@ -12,6 +12,7 @@ import CalendarBar from "../components/CalendarBar";
 import { SafeAreaView } from "react-navigation";
 import { AgendaList } from "react-native-calendars";
 import _ from "lodash";
+import { FAB, Input } from 'react-native-elements';
 
 // Data to test
 const today = new Date().toISOString().split("T")[0];
@@ -110,15 +111,6 @@ function renderEmptyItem() {
   );
 }
 
-onDateChanged = (/* date, updateSource */) => {
-  // console.warn('ExpandableCalendarScreen onDateChanged: ', date, updateSource);
-  // fetch and set data for date + week ahead
-};
-
-onMonthChange = (/* month, updateSource */) => {
-  // console.warn('ExpandableCalendarScreen onMonthChange: ', month, updateSource);
-};
-
 renderItem = ({ item }) => {
   if (_.isEmpty(item)) {
     return renderEmptyItem();
@@ -142,7 +134,7 @@ renderItem = ({ item }) => {
   );
 };
 
-const PersonalScreen = () => {
+const PersonalScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <CalendarBar>
@@ -152,8 +144,15 @@ const PersonalScreen = () => {
           renderItem={renderItem}
         />
       </CalendarBar>
+      <FAB title="Add" placement="right" onPress={() => navigation.navigate("Add")} />
     </SafeAreaView>
   );
+};
+
+PersonalScreen.navigationOptions = () => {
+  return {
+    headerShown: false,
+  };
 };
 
 const styles = StyleSheet.create({

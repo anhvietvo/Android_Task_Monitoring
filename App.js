@@ -10,6 +10,7 @@ import PersonalScreen from "./src/screens/PersonalScreen";
 import TeamScreen from "./src/screens/TeamScreen";
 import SignupScreen from "./src/screens/SignupScreen";
 import ResolveAuthScreen from "./src/screens/ResolveAuthScreen";
+import AddTaskForm from "./src/screens/AddTaskForm";
 
 import { Provider as AuthProvider } from "./src/context/AuthContext";
 import { setNavigator } from "./src/navigationRef";
@@ -21,7 +22,10 @@ const switchNavigator = createSwitchNavigator({
     //Signup: SignupScreen,
   //}),
   mainFlow: createBottomTabNavigator({
-    Personal: PersonalScreen,
+    Personal: createStackNavigator({
+      Personal: PersonalScreen,
+      Add: AddTaskForm,
+    }),
     Team: TeamScreen,
     Info: InfoScreen,
   }),
