@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
 import {
   Alert,
   StyleSheet,
@@ -12,7 +12,9 @@ import CalendarBar from "../components/CalendarBar";
 import { SafeAreaView } from "react-navigation";
 import { AgendaList } from "react-native-calendars";
 import _ from "lodash";
-import { FAB, Input } from 'react-native-elements';
+import { FAB } from 'react-native-elements';
+
+import { Context as TaskContext } from "../context/TaskContext";
 
 // Data to test
 const today = new Date().toISOString().split("T")[0];
@@ -135,6 +137,10 @@ renderItem = ({ item }) => {
 };
 
 const PersonalScreen = ({ navigation }) => {
+  const { state } = useContext(TaskContext);
+
+  console.log(state);
+  
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <CalendarBar>

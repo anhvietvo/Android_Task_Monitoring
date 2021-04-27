@@ -1,9 +1,10 @@
-import React, { useReducer } from "react";
+import React, { useReducer, useContext, useState } from "react";
 import { Text, ScrollView } from "react-native";
 
 import { Input, Button } from "react-native-elements";
 import SwitchComponent from "../components/SwitchComponent";
-import _ from "lodash";
+
+import { Context as TaskContext } from "../context/TaskContext";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -37,7 +38,19 @@ const reducer = (state, action) => {
 };
 
 const AddTaskForm = () => {
-  const [state, dispatch] = useReducer(reducer, {
+  // Context for action submit form
+  const { addTask } = useContext(TaskContext);
+
+  // State handle form value
+  const [title, setTitle] = useState("");
+  const [details, setDetails] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [startTime, setStartTime] = useState("");
+  const [finishDate, setFinishDate] = useState("");
+  const [finishTime, setFinishTime] = useState("");
+
+  // Reducer for handle switch
+  const [switchState, switchDispatch] = useReducer(reducer, {
     startDaySwitch: false,
     startTimeSwitch: false,
     finishDaySwitch: false,
@@ -47,15 +60,30 @@ const AddTaskForm = () => {
   return (
     <ScrollView>
       <Text style={{ fontSize: 45 }}>Add Task Form</Text>
-      <Input placeholder="Title" />
-      <Input placeholder="Details" />
-      <SwitchComponent name="Start" state={state} dispatch={dispatch} />
-      <SwitchComponent name="Finish" state={state} dispatch={dispatch} />
-      {Object.values(state).includes(false) ? (
-        <Button disabled title="Add Task" />
-      ) : (
-        <Button title="Add Task" />
-      )}
+      <Input placeholder="Title" value={title} onChangeText={setTitle} />
+      <Input placeholder="Details" value={details} onChangeText={setDetails} />
+      <SwitchComponent
+        name="Start"
+        state={{ switchState, startDate, startTime }}
+        dispatch={{ switchDispatch, setStartDate, setStartTime }}
+      />
+      <SwitchComponent
+        name="Finish"
+        state={{ switchState, finishDate, finishTime }}
+        dispatch={{ switchDispatch, setFinishDate, setFinishTime }}
+      />
+      <Button
+        title="Add Task"
+        disabled={
+          !Object.values(switchState).includes(false) &&
+          title.replace(/\s/g, "").length
+            ? false
+            : true
+        }
+        onPress={() =>
+          addTask(title, details, startDate, startTime, finishDate, finishTime)
+        }
+      />
     </ScrollView>
   );
 };
