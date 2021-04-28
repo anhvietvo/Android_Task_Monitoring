@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Text, View, StyleSheet } from "react-native";
 
 import { Calendar } from "react-native-calendars";
-import DateTimePicker from "@react-native-community/datetimepicker";
+//import DateTimePicker from "@react-native-community/datetimepicker";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { Switch } from "react-native-elements";
 import { Fontisto } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
@@ -41,10 +42,14 @@ const SwitchComponent = ({ name, state, dispatch }) => {
     setDate(date);
   };
 
-  const onChange = (event, selectedDate) => {
-    setShow(Platform.OS === "ios");
-    const selectedTime = selectedDate.toISOString().slice(11, 19);
+  const handleConfirm = (selectedDate) => {
+    hideTimePicker();
+    const selectedTime = selectedDate.toString().slice(16, 21);
     setTime(selectedTime);
+  };
+
+  const hideTimePicker = () => {
+    setShow(false);
   };
 
   useEffect(() => {
@@ -87,15 +92,17 @@ const SwitchComponent = ({ name, state, dispatch }) => {
           }}
         />
       </View>
-      {show && (
-        <DateTimePicker
-          style={{ alignSelf: "flex-end", width: 100 }}
-          mode="time"
-          value={new Date()}
-          onChange={onChange}
-          display={Platform.OS === "ios" ? "inline" : "default"}
-        />
-      )}
+      <DateTimePickerModal
+        isVisible={show}
+        headerTextIOS="Pick a time"
+        //style={{ alignSelf: "flex-end", width: 100 }}
+        mode="time"
+        value={new Date()}
+        onConfirm={handleConfirm}
+        onCancel={hideTimePicker}
+        //display={Platform.OS === "ios" ? "inline" : "default"}
+      />
+      {timeSwitch && !show && <Text>{time}</Text>}
     </View>
   );
 };
