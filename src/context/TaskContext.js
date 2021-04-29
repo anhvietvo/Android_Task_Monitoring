@@ -1,12 +1,19 @@
 import createDataContext from "./createDataContext";
 import { navigate } from "../navigationRef";
 
+import _ from "lodash";
+
 const reducer = (state, action) => {
   switch (action.type) {
     case "addTask":
       for (let i = 0; i < state.length; i++) {
         if (state[i].title === action.payload.finishDate) {
-          state[i].data.push(action.payload);
+          // Check have empty  before or not
+          if (_.isEmpty(state[i].data[0])) {
+            state[i].data[0] = action.payload;
+          } else {
+            state[i].data.push(action.payload);
+          }
           return [...state];
         }
       }
@@ -27,6 +34,13 @@ const reducer = (state, action) => {
           ],
         },
       ];
+    case "addEmpty":
+      for (let i = 0; i < state.length; i++) {
+        if (state[i].title === action.payload) {
+          return [...state];
+        }
+      }
+      return [...state, { title: action.payload, data: [{}] }];
     default:
       return state;
   }
@@ -42,8 +56,14 @@ const addTask = (dispatch) => {
   };
 };
 
+const addEmpty = (dispatch) => {
+  return (date) => {
+    dispatch({ type: "addEmpty", payload: date });
+  };
+};
+
 export const { Provider, Context } = createDataContext(
   reducer,
-  { addTask },
+  { addTask, addEmpty },
   []
 );

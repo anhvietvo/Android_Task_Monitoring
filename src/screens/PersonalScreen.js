@@ -24,18 +24,19 @@ function itemPressed(id) {
   Alert.alert(id);
 }
 
-function renderEmptyItem() {
-  return (
-    <View style={styles.emptyItem}>
-      <Text style={styles.emptyItemText}>No Events Planned</Text>
-    </View>
-  );
-}
-
-renderItem = ({ item }) => {
+const renderItem = ({ item }) => {
   if (_.isEmpty(item)) {
-    return renderEmptyItem();
+    return (
+      <View style={styles.emptyItem}>
+        <Text style={styles.emptyItemText}>No Events Planned</Text>
+      </View>
+    );
   }
+
+  const now = new Date();
+  const finishDate = new Date(item.finishDate);
+  const diffTime = Math.abs(finishDate - now);
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
   return (
     <TouchableOpacity
@@ -43,8 +44,8 @@ renderItem = ({ item }) => {
       style={styles.item}
     >
       <View>
-        <Text style={styles.itemHourText}>{item.startTime}</Text>
-        <Text style={styles.itemDurationText}>{item.finishTime}</Text>
+        <Text style={styles.itemHourText}>{item.finishTime}</Text>
+        <Text style={styles.itemDurationText}>Due in {diffDays} days</Text>
       </View>
       <Text style={styles.itemTitleText}>{item.title}</Text>
       <View style={styles.itemButtonContainer}>
@@ -57,13 +58,20 @@ renderItem = ({ item }) => {
 const PersonalScreen = ({ navigation }) => {
   const { state } = useContext(TaskContext);
 
-  console.log(state);
+  // Sort the state to render in ascending order
+  const sortedState = state.sort((a, b) => {
+    const aDate = new Date(a.title);
+    const bDate = new Date(b.title);
+    return aDate - bDate;
+  });
+
+  //console.log(sortedState);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <CalendarBar>
+      <CalendarBar marked={sortedState}>
         <AgendaList
-          sections={state}
+          sections={sortedState}
           //extraData={this.state}
           renderItem={renderItem}
         />
@@ -93,18 +101,21 @@ const styles = StyleSheet.create({
   },
   itemHourText: {
     color: "black",
+    alignSelf: "center",
   },
   itemDurationText: {
     color: "grey",
     fontSize: 12,
     marginTop: 4,
-    marginLeft: 4,
+    //marginLeft: 4,
   },
   itemTitleText: {
     color: "black",
     marginLeft: 16,
     fontWeight: "bold",
-    fontSize: 16,
+    fontSize: 18,
+    //alignSelf: "center",
+    marginLeft: 10,
   },
   itemButtonContainer: {
     flex: 1,
