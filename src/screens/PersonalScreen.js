@@ -70,11 +70,22 @@ const PersonalScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <CalendarBar marked={sortedState}>
-        <AgendaList
-          sections={sortedState}
-          //extraData={this.state}
-          renderItem={renderItem}
-        />
+        {sortedState.length ? (
+          <AgendaList
+            sections={sortedState}
+            //extraData={this.state}
+            renderItem={renderItem}
+          />
+        ) : (
+          <Text
+            style={[
+              styles.emptyItemText,
+              { flex: 1, fontSize: 30, marginTop: 20, alignSelf: "center" },
+            ]}
+          >
+            No Events Planned
+          </Text>
+        )}
       </CalendarBar>
       <FAB
         title="Add"
