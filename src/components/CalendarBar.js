@@ -6,10 +6,10 @@ import { Context as TaskContext } from "../context/TaskContext";
 
 const CalendarBar = ({ marked, children }) => {
   const { addEmpty } = useContext(TaskContext);
-  const offset = (new Date()).getTimezoneOffset() * 60000; // Get offset between local timezone and UTC in miliseconds
-  const today = (new Date(Date.now() - offset)).toISOString().split("T")[0];
+  const offset = new Date().getTimezoneOffset() * 60000; // Get offset between local timezone and UTC in miliseconds
+  const today = new Date(Date.now() - offset).toISOString().split("T")[0];
 
-  getMarkedDates = (markedArr) => {
+  const getMarkedDates = (markedArr) => {
     const marked = {};
     markedArr.forEach((item) => {
       // NOTE: only mark dates with data

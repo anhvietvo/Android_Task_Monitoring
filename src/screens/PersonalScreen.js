@@ -73,7 +73,7 @@ const PersonalScreen = ({ navigation }) => {
         {sortedState.length ? (
           <AgendaList
             sections={sortedState}
-            //extraData={this.state}
+            //extraData={state}
             renderItem={renderItem}
           />
         ) : (

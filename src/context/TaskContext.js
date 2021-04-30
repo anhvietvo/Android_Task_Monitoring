@@ -35,12 +35,17 @@ const reducer = (state, action) => {
         },
       ];
     case "addEmpty":
-      for (let i = 0; i < state.length; i++) {
-        if (state[i].title === action.payload) {
-          return [...state];
+      var checkHasEmpty = false;
+      const changeEmptyElement = state.map((task) => {
+        if (_.isEmpty(task.data[0])) {
+          checkHasEmpty = true;
+          return { title: action.payload, data: [{}] };
         }
-      }
-      return [...state, { title: action.payload, data: [{}] }];
+        return task;
+      });
+      return checkHasEmpty 
+        ? changeEmptyElement
+        : [...state, { title: action.payload, data: [{}] }]
     default:
       return state;
   }
