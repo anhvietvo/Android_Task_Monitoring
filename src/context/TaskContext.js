@@ -23,13 +23,14 @@ const reducer = (state, action) => {
           title: action.payload.finishDate,
           data: [
             {
-              //id: Math.round(Math.random() * 99999),
+              id: Math.round(Math.random() * 99999),
               title: action.payload.title,
               details: action.payload.details,
               startDate: action.payload.startDate,
               startTime: action.payload.startTime,
               finishDate: action.payload.finishDate,
               finishTime: action.payload.finishTime,
+              status: 0,
             },
           ],
         },
@@ -43,9 +44,18 @@ const reducer = (state, action) => {
         }
         return task;
       });
-      return checkHasEmpty 
+      return checkHasEmpty
         ? changeEmptyElement
-        : [...state, { title: action.payload, data: [{}] }]
+        : [...state, { title: action.payload, data: [{}] }];
+    case "updateStatus":
+      state.map((day) => {
+        day.data.map((task) => {
+          task.id === action.payload.id
+            ? (task.status = action.payload.status)
+            : task;
+        });
+      });
+      return [...state];
     default:
       return state;
   }
@@ -67,8 +77,30 @@ const addEmpty = (dispatch) => {
   };
 };
 
+const updateStatus = (dispatch) => {
+  return (id, status) => {
+    dispatch({ type: "updateStatus", payload: { id, status } });
+  };
+};
+
 export const { Provider, Context } = createDataContext(
   reducer,
-  { addTask, addEmpty },
-  []
+  { addTask, addEmpty, updateStatus },
+  [
+    {
+      title: "2021-02-05",
+      data: [
+        {
+          id: 1,
+          title: "Go rooftop with darling",
+          details: "",
+          startDate: "2021-02-01",
+          startTime: "01:01",
+          finishDate: "2021-02-05",
+          finishTime: "01:01",
+          status: 0,
+        },
+      ],
+    },
+  ]
 );

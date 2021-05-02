@@ -1,12 +1,5 @@
 import React, { useContext } from "react";
-import {
-  Alert,
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-  Button,
-} from "react-native";
+import { Alert, StyleSheet, View, Text, TouchableOpacity } from "react-native";
 
 import CalendarBar from "../components/CalendarBar";
 import { SafeAreaView } from "react-navigation";
@@ -16,15 +9,36 @@ import { FAB } from "react-native-elements";
 
 import { Context as TaskContext } from "../context/TaskContext";
 
-function buttonPressed() {
-  Alert.alert("show more");
+function buttonPressed(item, updateStatus) {
+  Alert.alert("Are you done?", "", [
+    {
+      text: "Not yet",
+      onPress: () => updateStatus(item.id, 0),
+      style: "cancel",
+    },
+    {
+      text: "OK",
+      onPress: () => {
+        updateStatus(item.id, 1);
+      },
+    },
+  ]);
 }
 
-function itemPressed(id) {
-  Alert.alert(id);
+function itemPressed(item) {
+  Alert.alert(
+    item.title,
+    item.details
+      ? `Details: ${item.details}\n`
+      : "" +
+          `Start Date: ${item.startDate}
+    \nStart Time: ${item.startTime}
+    \nFinish Date: ${item.finishDate}
+    \nFinish Time: ${item.finishTime}`
+  );
 }
 
-const renderItem = ({ item }) => {
+const renderItem = ({ item }, updateStatus) => {
   if (_.isEmpty(item)) {
     return (
       <View style={styles.emptyItem}>
@@ -35,28 +49,52 @@ const renderItem = ({ item }) => {
 
   const now = new Date();
   const finishDate = new Date(item.finishDate);
-  const diffTime = Math.abs(finishDate - now);
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  var diffDays;
+  const diff = (finish, now) => {
+    return finish - now;
+  };
+  if (diffTime = diff(finishDate, now) >= 0) {
+    diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  } else {
+    diffDays = -1;
+  }
 
   return (
-    <TouchableOpacity
-      onPress={() => itemPressed(item.title)}
-      style={styles.item}
-    >
+    <TouchableOpacity onPress={() => itemPressed(item)} style={styles.item}>
       <View>
-        <Text style={styles.itemHourText}>{item.finishTime}</Text>
-        <Text style={styles.itemDurationText}>Due in {diffDays} days</Text>
+        <Text
+          style={[styles.itemHourText, item.status ? styles.textDone : null]}
+        >
+          {item.finishTime}
+        </Text>
+        <Text style={styles.itemDurationText}>{diffDays === -1 ? "Time out" : `Due in ${diffDays} days`}</Text>
       </View>
-      <Text style={styles.itemTitleText}>{item.title}</Text>
-      <View style={styles.itemButtonContainer}>
-        <Button color={"grey"} title={"Info"} onPress={buttonPressed} />
-      </View>
+      <Text
+        style={[styles.itemTitleText, item.status ? styles.textDone : null]}
+      >
+        {item.title}
+      </Text>
+      <TouchableOpacity
+        style={styles.itemButtonContainer}
+        onPress={() => buttonPressed(item, updateStatus)}
+      >
+        <Text
+          style={{
+            fontSize: 16,
+            alignSelf: "center",
+            color: "gray",
+            fontWeight: "200",
+          }}
+        >
+          {item.status ? "Done" : "Working..."}
+        </Text>
+      </TouchableOpacity>
     </TouchableOpacity>
   );
 };
 
 const PersonalScreen = ({ navigation }) => {
-  const { state } = useContext(TaskContext);
+  const { state, updateStatus } = useContext(TaskContext);
 
   // Sort the state to render in ascending order
   const sortedState = state.sort((a, b) => {
@@ -65,16 +103,14 @@ const PersonalScreen = ({ navigation }) => {
     return aDate - bDate;
   });
 
-  //console.log(sortedState);
-
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <CalendarBar marked={sortedState}>
         {sortedState.length ? (
           <AgendaList
             sections={sortedState}
-            //extraData={state}
-            renderItem={renderItem}
+            extraData={state}
+            renderItem={(item) => renderItem(item, updateStatus)}
           />
         ) : (
           <Text
@@ -104,7 +140,7 @@ PersonalScreen.navigationOptions = () => {
 
 const styles = StyleSheet.create({
   item: {
-    padding: 20,
+    padding: 15,
     backgroundColor: "white",
     borderBottomWidth: 1,
     borderBottomColor: "lightgrey",
@@ -122,15 +158,14 @@ const styles = StyleSheet.create({
   },
   itemTitleText: {
     color: "black",
-    marginLeft: 16,
+    marginHorizontal: 16,
     fontWeight: "bold",
-    fontSize: 18,
+    fontSize: 16,
     //alignSelf: "center",
-    marginLeft: 10,
   },
   itemButtonContainer: {
+    //backgroundColor: "red",
     flex: 1,
-    alignItems: "flex-end",
   },
   emptyItem: {
     paddingLeft: 20,
@@ -142,6 +177,10 @@ const styles = StyleSheet.create({
   emptyItemText: {
     color: "lightgrey",
     fontSize: 14,
+  },
+  textDone: {
+    textDecorationLine: "line-through",
+    textDecorationStyle: "solid",
   },
 });
 
