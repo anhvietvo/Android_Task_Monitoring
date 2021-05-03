@@ -113,8 +113,15 @@ const addEmpty = (dispatch) => {
 };
 
 const updateStatus = (dispatch) => {
-  return (PTID, status) => {
-    dispatch({ type: "updateStatus", payload: { PTID, status } });
+  return async (PTID, status) => {
+    try {
+      const res = await axios.post("/personal/edit", { PTID, status });
+      console.log(res.data);
+
+      dispatch({ type: "updateStatus", payload: { PTID, status } });
+    } catch (err) {
+      console.log(err);
+    }
   };
 };
 
