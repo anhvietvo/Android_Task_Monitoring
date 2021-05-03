@@ -13,13 +13,13 @@ function buttonPressed(item, updateStatus) {
   Alert.alert("Are you done?", "", [
     {
       text: "Not yet",
-      onPress: () => updateStatus(item.id, 0),
+      onPress: () => updateStatus(item.PTID, 0),
       style: "cancel",
     },
     {
       text: "OK",
       onPress: () => {
-        updateStatus(item.id, 1);
+        updateStatus(item.PTID, 1);
       },
     },
   ]);
@@ -30,11 +30,12 @@ function itemPressed(item) {
     item.title,
     item.details
       ? `Details: ${item.details}\n`
-      : "" +
-          `Start Date: ${item.startDate}
-    \nStart Time: ${item.startTime}
-    \nFinish Date: ${item.finishDate}
-    \nFinish Time: ${item.finishTime}`
+      : "" 
+    +
+    `Start Date: ${item.startDate}
+    Start Time: ${item.startTime}
+    Finish Date: ${item.finishDate}
+    Finish Time: ${item.finishTime}`
   );
 }
 
@@ -53,7 +54,7 @@ const renderItem = ({ item }, updateStatus) => {
   const diff = (finish, now) => {
     return finish - now;
   };
-  if (diffTime = diff(finishDate, now) >= 0) {
+  if ((diffTime = diff(finishDate, now) >= 0)) {
     diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   } else {
     diffDays = -1;
@@ -67,7 +68,9 @@ const renderItem = ({ item }, updateStatus) => {
         >
           {item.finishTime}
         </Text>
-        <Text style={styles.itemDurationText}>{diffDays === -1 ? "Time out" : `Due in ${diffDays} days`}</Text>
+        <Text style={styles.itemDurationText}>
+          {diffDays === -1 ? "Time out" : `Due in ${diffDays} days`}
+        </Text>
       </View>
       <Text
         style={[styles.itemTitleText, item.status ? styles.textDone : null]}

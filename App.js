@@ -17,11 +17,11 @@ import { Provider as TaskProvider } from "./src/context/TaskContext";
 import { setNavigator } from "./src/navigationRef";
 
 const switchNavigator = createSwitchNavigator({
-  //resolveAuth: ResolveAuthScreen,
-  //loginFlow: createStackNavigator({
-  //Signin: LoginScreen,
-  //Signup: SignupScreen,
-  //}),
+  resolveAuth: ResolveAuthScreen,
+  loginFlow: createStackNavigator({
+    Signin: LoginScreen,
+    Signup: SignupScreen,
+  }),
   mainFlow: createBottomTabNavigator({
     Personal: createStackNavigator({
       Personal: PersonalScreen,

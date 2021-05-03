@@ -9,35 +9,44 @@ const authReducer = (state, action) => {
     case "add_err":
       return { ...state, errorMessage: action.payload };
     case "signin":
-      return { errorMessage: "", token: action.payload };
+      return {
+        errorMessage: "",
+        token: action.payload.token,
+        username: action.payload.username,
+      };
     case "clear_err_msg":
       return { ...state, errorMessage: "" };
     case "signout":
-      return {token: null, errorMessage: ""};
+      return { token: null, errorMessage: "", username: "" };
     default:
       return state;
   }
 };
 
-const clearErrorMessage = dispatch => () => {
-  dispatch({ type: "clear_err_msg" })
-}
+const clearErrorMessage = (dispatch) => () => {
+  dispatch({ type: "clear_err_msg" });
+};
 
-const tryLocalSignin = dispatch => async () => {
+const tryLocalSignin = (dispatch) => async () => {
   const token = await AsyncStorage.getItem("token");
   if (token) {
-    dispatch({ type: "signin", payload: token})
+    const res = await axios.get("/", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    dispatch({ type: "signin", payload: { token, username: res.data } });
     navigate("Personal");
   } else {
     navigate("loginFlow");
   }
-}
+};
 
-const signout = dispatch => async () => {
+const signout = (dispatch) => async () => {
   await AsyncStorage.removeItem("token");
   dispatch({ type: "signout" });
   navigate("loginFlow");
-}
+};
 
 const signin = (dispatch) => {
   return async ({ username, password }) => {
@@ -46,7 +55,10 @@ const signin = (dispatch) => {
       const res = await axios.post("/signin", { username, password });
       console.log(res.data);
       await AsyncStorage.setItem("token", res.data.token);
-      dispatch({ type: "signin", payload: res.data.token });
+      dispatch({
+        type: "signin",
+        payload: { token: res.data.token, username },
+      });
       navigate("Personal");
     } catch (err) {
       dispatch({
@@ -75,5 +87,5 @@ const signup = (dispatch) => async ({ fullname, username, password }) => {
 export const { Provider, Context } = createDataContext(
   authReducer,
   { signin, signout, signup, clearErrorMessage, tryLocalSignin, signout },
-  { token: null, errorMessage: "" }
+  { token: null, errorMessage: "", username: "" }
 );

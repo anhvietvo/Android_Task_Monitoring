@@ -1,6 +1,6 @@
 import createDataContext from "./createDataContext";
 import { navigate } from "../navigationRef";
-
+import axios from "../api/axios";
 import _ from "lodash";
 
 const reducer = (state, action) => {
@@ -23,14 +23,14 @@ const reducer = (state, action) => {
           title: action.payload.finishDate,
           data: [
             {
-              id: Math.round(Math.random() * 99999),
+              PTID: action.payload.PTID,
               title: action.payload.title,
               details: action.payload.details,
               startDate: action.payload.startDate,
               startTime: action.payload.startTime,
               finishDate: action.payload.finishDate,
               finishTime: action.payload.finishTime,
-              status: 0,
+              status: action.payload.status,
             },
           ],
         },
@@ -50,7 +50,7 @@ const reducer = (state, action) => {
     case "updateStatus":
       state.map((day) => {
         day.data.map((task) => {
-          task.id === action.payload.id
+          task.PTID === action.payload.PTID
             ? (task.status = action.payload.status)
             : task;
         });
@@ -62,12 +62,47 @@ const reducer = (state, action) => {
 };
 
 const addTask = (dispatch) => {
-  return (title, details, startDate, startTime, finishDate, finishTime) => {
-    dispatch({
-      type: "addTask",
-      payload: { title, details, startDate, startTime, finishDate, finishTime },
-    });
-    navigate("Personal");
+  return async (
+    title,
+    details,
+    startDate,
+    startTime,
+    finishDate,
+    finishTime,
+    username
+  ) => {
+    try {
+      const PTID = Math.round(Math.random() * 99999);
+      const status = 0;
+      const res = await axios.post("/personal/add", {
+        PTID,
+        title,
+        details,
+        startDate,
+        startTime,
+        finishDate,
+        finishTime,
+        status,
+        username,
+      });
+      console.log(res.data);
+      dispatch({
+        type: "addTask",
+        payload: {
+          PTID,
+          title,
+          details,
+          startDate,
+          startTime,
+          finishDate,
+          finishTime,
+          status,
+        },
+      });
+      navigate("Personal");
+    } catch (err) {
+      console.log(err);
+    }
   };
 };
 
@@ -78,8 +113,8 @@ const addEmpty = (dispatch) => {
 };
 
 const updateStatus = (dispatch) => {
-  return (id, status) => {
-    dispatch({ type: "updateStatus", payload: { id, status } });
+  return (PTID, status) => {
+    dispatch({ type: "updateStatus", payload: { PTID, status } });
   };
 };
 
@@ -91,7 +126,7 @@ export const { Provider, Context } = createDataContext(
       title: "2021-02-05",
       data: [
         {
-          id: 1,
+          PTID: 1,
           title: "Go rooftop with darling",
           details: "",
           startDate: "2021-02-01",

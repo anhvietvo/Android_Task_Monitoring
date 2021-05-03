@@ -5,6 +5,7 @@ import { Input, Button } from "react-native-elements";
 import SwitchComponent from "../components/SwitchComponent";
 
 import { Context as TaskContext } from "../context/TaskContext";
+import { Context as AuthContext } from "../context/AuthContext";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -40,6 +41,7 @@ const reducer = (state, action) => {
 const AddTaskForm = () => {
   // Context for action submit form
   const { addTask } = useContext(TaskContext);
+  const { state } = useContext(AuthContext);
 
   // State handle form value
   const [title, setTitle] = useState("");
@@ -80,9 +82,17 @@ const AddTaskForm = () => {
             ? false
             : true
         }
-        onPress={() =>
-          addTask(title, details, startDate, startTime, finishDate, finishTime)
-        }
+        onPress={() => {
+          addTask(
+            title,
+            details,
+            startDate,
+            startTime,
+            finishDate,
+            finishTime,
+            (username = state.username)
+          );
+        }}
       />
     </ScrollView>
   );
