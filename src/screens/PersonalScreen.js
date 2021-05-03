@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Alert, StyleSheet, View, Text, TouchableOpacity } from "react-native";
 
 import CalendarBar from "../components/CalendarBar";
@@ -8,6 +8,7 @@ import _ from "lodash";
 import { FAB } from "react-native-elements";
 
 import { Context as TaskContext } from "../context/TaskContext";
+import { Context as AuthContext } from "../context/AuthContext";
 
 function buttonPressed(item, updateStatus) {
   Alert.alert("Are you done?", "", [
@@ -30,9 +31,8 @@ function itemPressed(item) {
     item.title,
     item.details
       ? `Details: ${item.details}\n`
-      : "" 
-    +
-    `Start Date: ${item.startDate}
+      : "" +
+          `Start Date: ${item.startDate}
     Start Time: ${item.startTime}
     Finish Date: ${item.finishDate}
     Finish Time: ${item.finishTime}`
@@ -68,9 +68,13 @@ const renderItem = ({ item }, updateStatus) => {
         >
           {item.finishTime}
         </Text>
-        <Text style={styles.itemDurationText}>
-          {diffDays === -1 ? "Time out" : `Due in ${diffDays} days`}
-        </Text>
+        {diffDays === -1 ? (
+          <Text style={[styles.itemDurationText, { color: "red" }]}>
+            Time out
+          </Text>
+        ) : (
+          <Text style={styles.itemDurationText}>Due in {diffDays} days</Text>
+        )}
       </View>
       <Text
         style={[styles.itemTitleText, item.status ? styles.textDone : null]}
@@ -97,7 +101,8 @@ const renderItem = ({ item }, updateStatus) => {
 };
 
 const PersonalScreen = ({ navigation }) => {
-  const { state, updateStatus } = useContext(TaskContext);
+  const { state, updateStatus, loadTask } = useContext(TaskContext);
+  const authContext = useContext(AuthContext);
 
   // Sort the state to render in ascending order
   const sortedState = state.sort((a, b) => {
@@ -105,6 +110,10 @@ const PersonalScreen = ({ navigation }) => {
     const bDate = new Date(b.title);
     return aDate - bDate;
   });
+
+  useEffect(() => {
+    loadTask(authContext.state.username);
+  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -164,11 +173,12 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     fontWeight: "bold",
     fontSize: 16,
+    flex: 1,
     //alignSelf: "center",
   },
   itemButtonContainer: {
     //backgroundColor: "red",
-    flex: 1,
+    //flex: 1,
   },
   emptyItem: {
     paddingLeft: 20,

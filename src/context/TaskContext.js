@@ -125,24 +125,30 @@ const updateStatus = (dispatch) => {
   };
 };
 
+const loadTask = (dispatch) => {
+  return async (username) => {
+    try {
+      const res = await axios.post("/personal", { username });
+      return res.data.map((row) => {
+        return dispatch({
+          type: "addTask",
+          payload: {
+            ...row,
+            startDate: row.startDate.slice(0, 10),
+            startTime: row.startTime.slice(0, 5),
+            finishDate: row.finishDate.slice(0, 10),
+            finishTime: row.finishTime.slice(0, 5),
+          },
+        });
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+};
+
 export const { Provider, Context } = createDataContext(
   reducer,
-  { addTask, addEmpty, updateStatus },
-  [
-    {
-      title: "2021-02-05",
-      data: [
-        {
-          PTID: 1,
-          title: "Go rooftop with darling",
-          details: "",
-          startDate: "2021-02-01",
-          startTime: "01:01",
-          finishDate: "2021-02-05",
-          finishTime: "01:01",
-          status: 0,
-        },
-      ],
-    },
-  ]
+  { addTask, addEmpty, updateStatus, loadTask },
+  []
 );
