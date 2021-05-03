@@ -32,10 +32,7 @@ function itemPressed(item) {
     item.details
       ? `Details: ${item.details}\n`
       : "" +
-          `Start Date: ${item.startDate}
-    Start Time: ${item.startTime}
-    Finish Date: ${item.finishDate}
-    Finish Time: ${item.finishTime}`
+          `Start Date: ${item.startDate}\nStart Time: ${item.startTime}\nFinish Date: ${item.finishDate}\nFinish Time: ${item.finishTime}`
   );
 }
 

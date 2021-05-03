@@ -56,6 +56,10 @@ const reducer = (state, action) => {
         });
       });
       return [...state];
+    case "deleteTask":
+      state.filter((task) => task.PTID != action.payload);
+    case "clearTask":
+      return [];
     default:
       return state;
   }
@@ -125,8 +129,15 @@ const updateStatus = (dispatch) => {
   };
 };
 
+const deleteTask = (dispatch) => {
+  return (PTID) => {
+    dispatch({ type: "deleteTask", payload: PTID });
+  };
+};
+
 const loadTask = (dispatch) => {
   return async (username) => {
+    dispatch({ type: "clearTask" });
     try {
       const res = await axios.post("/personal", { username });
       return res.data.map((row) => {
@@ -147,8 +158,12 @@ const loadTask = (dispatch) => {
   };
 };
 
+const clearTask = (dispatch) => {
+  return () => dispatch({ type: "clearTask" });
+};
+
 export const { Provider, Context } = createDataContext(
   reducer,
-  { addTask, addEmpty, updateStatus, loadTask },
+  { addTask, addEmpty, updateStatus, loadTask, clearTask },
   []
 );

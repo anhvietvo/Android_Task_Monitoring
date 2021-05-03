@@ -25,7 +25,7 @@ const CalendarBar = ({ marked, children }) => {
       date={today}
       showTodayButton
       onDateChanged={(date) => {
-        if (!marked.includes(date)) {
+        if (_.isEmpty(marked.find(item => item.title === date))) {
           addEmpty(date);
         }
       }}

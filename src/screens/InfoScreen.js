@@ -10,12 +10,21 @@ const InfoScreen = () => {
 
   return (
     <SafeAreaView forceInset={{ top: "always" }}>
-      <Text style={{fontSize: 48}}>Info Screen</Text>
+      <Text style={{ fontSize: 48 }}>Info Screen</Text>
       <TouchableOpacity style={styles.btn} onPress={signout}>
-        <Text style={{ fontWeight: "bold", color: "#171b84", fontSize: 20, alignSelf: "center" }}>Log out</Text>
+        <Text
+          style={{
+            fontWeight: "bold",
+            color: "#171b84",
+            fontSize: 20,
+            alignSelf: "center",
+          }}
+        >
+          Log out
+        </Text>
       </TouchableOpacity>
     </SafeAreaView>
-  )
+  );
 };
 
 const styles = StyleSheet.create({
@@ -30,6 +39,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#edf6ff",
     borderColor: "#2E3191",
   },
-})
+});
 
 export default InfoScreen;
