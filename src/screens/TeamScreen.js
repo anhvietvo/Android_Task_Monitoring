@@ -6,7 +6,7 @@ import { SafeAreaView } from "react-navigation";
 
 const TeamScreen = () => {
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView forceInset={{ top: "always" }} style={{ flex: 1 }}>
       <CalendarBar marked={[]} />
     </SafeAreaView>
   );

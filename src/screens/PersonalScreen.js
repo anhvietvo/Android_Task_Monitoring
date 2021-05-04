@@ -35,6 +35,10 @@ const itemPressed = (item, deleteTask) => {
           `Start Date: ${item.startDate}\nStart Time: ${item.startTime}\nFinish Date: ${item.finishDate}\nFinish Time: ${item.finishTime}`,
     [
       {
+        text: "Cancel",
+        style: "cancel",
+      },
+      {
         text: "Delete",
         onPress: () => deleteTask(item.PTID),
         style: "destructive",
@@ -69,7 +73,7 @@ const renderItem = ({ item }, updateStatus, deleteTask) => {
       onPress={() => itemPressed(item, deleteTask)}
       style={styles.item}
     >
-      <View>
+      <View style={{ width: 65 }}>
         <Text
           style={[styles.itemHourText, item.status ? styles.textDone : null]}
         >
@@ -80,7 +84,7 @@ const renderItem = ({ item }, updateStatus, deleteTask) => {
             Time out
           </Text>
         ) : (
-          <Text style={styles.itemDurationText}>Due in {diffDays} days</Text>
+          <Text style={styles.itemDurationText}>Due: {diffDays} days</Text>
         )}
       </View>
       <Text
@@ -123,7 +127,7 @@ const PersonalScreen = ({ navigation }) => {
   }, []);
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView forceInset={{ top: "always" }} style={{ flex: 1 }}>
       <CalendarBar marked={sortedState}>
         {sortedState.length ? (
           <AgendaList
@@ -159,7 +163,8 @@ PersonalScreen.navigationOptions = () => {
 
 const styles = StyleSheet.create({
   item: {
-    padding: 15,
+    paddingVertical: 20,
+    paddingHorizontal: 10,
     backgroundColor: "white",
     borderBottomWidth: 1,
     borderBottomColor: "lightgrey",
@@ -173,6 +178,7 @@ const styles = StyleSheet.create({
     color: "grey",
     fontSize: 12,
     marginTop: 4,
+    alignSelf: "center",
     //marginLeft: 4,
   },
   itemTitleText: {
