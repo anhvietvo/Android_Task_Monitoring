@@ -57,7 +57,13 @@ const reducer = (state, action) => {
       });
       return [...state];
     case "deleteTask":
-      state.filter((task) => task.PTID != action.payload);
+      state.forEach((item) => {
+        const taskData = item.data.filter(
+          (task) => task.PTID !== action.payload
+        );
+        item.data = taskData.length ? taskData : [{}];
+      });
+      return [...state];
     case "clearTask":
       return [];
     default:
@@ -130,8 +136,16 @@ const updateStatus = (dispatch) => {
 };
 
 const deleteTask = (dispatch) => {
-  return (PTID) => {
-    dispatch({ type: "deleteTask", payload: PTID });
+  return async (PTID) => {
+    // Delete from db
+    try {
+      const res = await axios.post("/personal/delete", { PTID });
+      console.log(res.data);
+      // Delete from state
+      dispatch({ type: "deleteTask", payload: PTID });
+    } catch (err) {
+      console.log(err);
+    }
   };
 };
 
@@ -164,6 +178,6 @@ const clearTask = (dispatch) => {
 
 export const { Provider, Context } = createDataContext(
   reducer,
-  { addTask, addEmpty, updateStatus, loadTask, clearTask },
+  { addTask, addEmpty, updateStatus, loadTask, deleteTask, clearTask },
   []
 );

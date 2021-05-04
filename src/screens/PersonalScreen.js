@@ -10,7 +10,7 @@ import { FAB } from "react-native-elements";
 import { Context as TaskContext } from "../context/TaskContext";
 import { Context as AuthContext } from "../context/AuthContext";
 
-function buttonPressed(item, updateStatus) {
+const buttonPressed = (item, updateStatus) => {
   Alert.alert("Are you done?", "", [
     {
       text: "Not yet",
@@ -24,19 +24,26 @@ function buttonPressed(item, updateStatus) {
       },
     },
   ]);
-}
+};
 
-function itemPressed(item) {
+const itemPressed = (item, deleteTask) => {
   Alert.alert(
     item.title,
     item.details
       ? `Details: ${item.details}\n`
       : "" +
-          `Start Date: ${item.startDate}\nStart Time: ${item.startTime}\nFinish Date: ${item.finishDate}\nFinish Time: ${item.finishTime}`
+          `Start Date: ${item.startDate}\nStart Time: ${item.startTime}\nFinish Date: ${item.finishDate}\nFinish Time: ${item.finishTime}`,
+    [
+      {
+        text: "Delete",
+        onPress: () => deleteTask(item.PTID),
+        style: "destructive",
+      },
+    ]
   );
-}
+};
 
-const renderItem = ({ item }, updateStatus) => {
+const renderItem = ({ item }, updateStatus, deleteTask) => {
   if (_.isEmpty(item)) {
     return (
       <View style={styles.emptyItem}>
@@ -58,7 +65,10 @@ const renderItem = ({ item }, updateStatus) => {
   }
 
   return (
-    <TouchableOpacity onPress={() => itemPressed(item)} style={styles.item}>
+    <TouchableOpacity
+      onPress={() => itemPressed(item, deleteTask)}
+      style={styles.item}
+    >
       <View>
         <Text
           style={[styles.itemHourText, item.status ? styles.textDone : null]}
@@ -98,7 +108,7 @@ const renderItem = ({ item }, updateStatus) => {
 };
 
 const PersonalScreen = ({ navigation }) => {
-  const { state, updateStatus, loadTask } = useContext(TaskContext);
+  const { state, updateStatus, loadTask, deleteTask } = useContext(TaskContext);
   const authContext = useContext(AuthContext);
 
   // Sort the state to render in ascending order
@@ -119,7 +129,7 @@ const PersonalScreen = ({ navigation }) => {
           <AgendaList
             sections={sortedState}
             extraData={state}
-            renderItem={(item) => renderItem(item, updateStatus)}
+            renderItem={(item) => renderItem(item, updateStatus, deleteTask)}
           />
         ) : (
           <Text
