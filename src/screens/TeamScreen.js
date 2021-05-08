@@ -1,22 +1,29 @@
 import React from "react";
-import { Text, View, StyleSheet } from "react-native";
-import { Button } from "react-native-elements";
-import { AntDesign } from "@expo/vector-icons";
+import TaskList from "../components/TaskList";
+import { FAB } from "react-native-elements";
 
 import CalendarBar from "../components/CalendarBar";
 import { SafeAreaView } from "react-navigation";
 
-const TeamScreen = () => {
+const TeamScreen = ({ navigation }) => {
   return (
     <SafeAreaView forceInset={{ top: "always" }} style={{ flex: 1 }}>
-      <Text style={{fontSize: 24, fontWeight: "bold"}}>Task Today</Text>
-      <Text>You don't have any teams yet</Text>
-      <Button
-        icon={<AntDesign name="team" size={24} color="white" />}
-        title="Your Team"
+      <CalendarBar marked={[]}>
+        <TaskList sortedState={[]} />
+      </CalendarBar>
+      <FAB
+        title="Teams"
+        placement="right"
+        onPress={() => navigation.navigate("ManageTeams")}
       />
     </SafeAreaView>
   );
+};
+
+TeamScreen.navigationOptions = () => {
+  return {
+    headerShown: false,
+  };
 };
 
 export default TeamScreen;
