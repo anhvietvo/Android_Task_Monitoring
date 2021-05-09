@@ -1,24 +1,48 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useCallback, useState } from "react";
 import {
   Text,
   View,
   StyleSheet,
   TouchableOpacity,
   FlatList,
+  RefreshControl,
+  ScrollView,
 } from "react-native";
 import { FAB } from "react-native-elements";
 
 import { Context as TeamContext } from "../context/TeamContext";
+import { Context as AuthContext } from "../context/AuthContext";
+
+const wait = (timeout) => {
+  return new Promise((resolve) => setTimeout(resolve, timeout));
+};
 
 const ManageTeams = ({ navigation }) => {
-  const { state } = useContext(TeamContext);
+  const { state, loadTeam } = useContext(TeamContext);
+  const authContext = useContext(AuthContext);
+
+  // Control pull down flat list to refresh
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => setRefreshing(false));
+  }, []);
+
+  // Load Team in db to render every time ManageTeams Screen re-render
+  useEffect(() => {
+    loadTeam(authContext.state.username);
+  }, []);
 
   return (
     <View style={styles.btnContainer}>
       {state.length ? (
         <FlatList
-          keyExtractor={(item) => item.TID}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
           data={state}
+          keyExtractor={(item) => item.TID.toString()}
           renderItem={({ item }) => {
             return (
               <TouchableOpacity
@@ -31,7 +55,14 @@ const ManageTeams = ({ navigation }) => {
           }}
         />
       ) : (
-        <Text style={styles.emptyItemText}>No Team Created</Text>
+        <ScrollView
+          style={styles.btnContainer}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
+          <Text style={styles.emptyItemText}>No Team Created</Text>
+        </ScrollView>
       )}
       <FAB
         title="Create Team"
