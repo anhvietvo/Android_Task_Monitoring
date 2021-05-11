@@ -39,9 +39,8 @@ const reducer = (state, action) => {
 
 // AddTaskForm will be used for both Personal and Team
 // so addTask must be assigned for suitable action
-const AddTaskForm = ({ contextForTask }) => {
+const AddTaskForm = ({ addTask, children }) => {
   // Context for action submit form
-  const { addTask } = useContext(contextForTask);
   const { state } = useContext(AuthContext);
 
   // State handle form value
@@ -65,6 +64,7 @@ const AddTaskForm = ({ contextForTask }) => {
       <Text style={{ fontSize: 35 }}>Add Task Form</Text>
       <Input placeholder="Title" value={title} onChangeText={setTitle} />
       <Input placeholder="Details" value={details} onChangeText={setDetails} />
+      {children}
       <SwitchComponent
         name="Start"
         state={{ switchState, startDate, startTime }}

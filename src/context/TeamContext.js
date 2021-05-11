@@ -7,18 +7,29 @@ import _ from "lodash";
 const reducer = (state, action) => {
   switch (action.type) {
     case "addTeam":
-      // Check TID is already existed in state or not
-      return state.some((team) => team.TID === action.payload.TID)
-        ? [...state]
-        : [
-            ...state,
-            {
-              TID: action.payload.TID,
-              name: action.payload.name,
-              details: action.payload.details,
-              manager: action.payload.manager,
-            },
-          ];
+      return [
+        ...state,
+        {
+          TID: action.payload.TID,
+          name: action.payload.name,
+          details: action.payload.details,
+          manager: action.payload.manager,
+        },
+      ];
+    // Check TID is already existed in state or not
+    //return state.some((team) => team.TID === action.payload.TID)
+    //? [...state]
+    //: [
+    //...state,
+    //{
+    //TID: action.payload.TID,
+    //name: action.payload.name,
+    //details: action.payload.details,
+    //manager: action.payload.manager,
+    //},
+    //];
+    case "clearTeam":
+      return [];
     default:
       return state;
   }
@@ -48,11 +59,12 @@ const addTeam = (dispatch) => {
   };
 };
 
-// TODO: Load team from db 
+// TODO: Load team from db
 const loadTeam = (dispatch) => {
   return async (username) => {
+    dispatch({ type: "clearTeam" });
     try {
-      // Load team from Teams-schema 
+      // Load team from Teams-schema INNER JOIN with Employees-schema
       const res = await axios.post("/team", {
         username,
       });
