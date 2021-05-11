@@ -2,8 +2,8 @@ import React, { useState, useContext } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Input, Button } from "react-native-elements";
 
-import { Context as TeamContext } from "../context/TeamContext";
-import { Context as AuthContext } from "../context/AuthContext";
+import { Context as TeamContext } from "../../context/TeamContext";
+import { Context as AuthContext } from "../../context/AuthContext";
 
 const CreateTeam = () => {
   const { addTeam } = useContext(TeamContext);

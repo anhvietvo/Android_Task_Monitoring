@@ -1,13 +1,13 @@
 import React, { useContext, useEffect } from "react";
 
-import CalendarBar from "../components/CalendarBar";
+import CalendarBar from "../../components/CalendarBar";
 import { SafeAreaView } from "react-navigation";
 import _ from "lodash";
 import { FAB } from "react-native-elements";
-import TaskList from "../components/TaskList";
+import TaskList from "../../components/TaskList";
 
-import { Context as TaskContext } from "../context/TaskContext";
-import { Context as AuthContext } from "../context/AuthContext";
+import { Context as TaskContext } from "../../context/TaskContext";
+import { Context as AuthContext } from "../../context/AuthContext";
 
 const PersonalScreen = ({ navigation }) => {
   const { state, updateStatus, loadTask, deleteTask } = useContext(TaskContext);

@@ -15,7 +15,7 @@ import { NavigationEvents } from "react-navigation";
 
 import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
-import { Context as AuthContext } from "../context/AuthContext";
+import { Context as AuthContext } from "../../context/AuthContext";
 
 const LoginScreen = ({ navigation }) => {
   const { state, signin, clearErrorMessage } = useContext(
@@ -32,7 +32,7 @@ const LoginScreen = ({ navigation }) => {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.background}>
           <NavigationEvents onWillFocus={clearErrorMessage} />
-          <Image style={styles.img} source={require("../../assets/logo.png")} />
+          <Image style={styles.img} source={require("../../../assets/logo.png")} />
           <View style={styles.inputContainer}>
             <Feather name="user" style={styles.icon} color="#2E3191" />
             <TextInput

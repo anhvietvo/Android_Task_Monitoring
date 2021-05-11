@@ -10,8 +10,8 @@ import {
 } from "react-native";
 import { FAB } from "react-native-elements";
 
-import { Context as TeamContext } from "../context/TeamContext";
-import { Context as AuthContext } from "../context/AuthContext";
+import { Context as TeamContext } from "../../context/TeamContext";
+import { Context as AuthContext } from "../../context/AuthContext";
 
 const wait = (timeout) => {
   return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -47,7 +47,7 @@ const ManageTeams = ({ navigation }) => {
             return (
               <TouchableOpacity
                 style={styles.btn}
-                onPress={() => navigation.navigate("TeamTask")}
+                onPress={() => navigation.navigate("TeamTask", { item })}
               >
                 <Text style={styles.text}>{item.name}</Text>
               </TouchableOpacity>

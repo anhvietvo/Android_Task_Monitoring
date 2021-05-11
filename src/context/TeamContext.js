@@ -37,7 +37,10 @@ const addTeam = (dispatch) => {
         manager,
       });
       console.log(res.data);
-      dispatch({ type: "addTeam", payload: { TID, name, details, manager } });
+      dispatch({
+        type: "addTeam",
+        payload: { TID, name, details, manager },
+      });
       navigate("ManageTeams");
     } catch (err) {
       console.log(err);
@@ -45,15 +48,15 @@ const addTeam = (dispatch) => {
   };
 };
 
-// TODO: Load team from table Employees after
+// TODO: Load team from db 
 const loadTeam = (dispatch) => {
   return async (username) => {
     try {
+      // Load team from Teams-schema 
       const res = await axios.post("/team", {
         username,
       });
-      // Only check manager in Teams-schema not check in employees yet
-      //res.data.filter(item => _.find(state, item))
+
       res.data.map((team) => {
         dispatch({
           type: "addTeam",
