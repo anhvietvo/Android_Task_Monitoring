@@ -1,6 +1,6 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Text, ScrollView } from "react-native";
-import { Button, SearchBar, Divider, Input } from "react-native-elements";
+import { Button, CheckBox, Divider, Input } from "react-native-elements";
 import { NavigationEvents } from "react-navigation";
 
 import AddTaskForm from "../../components/AddTaskForm";
@@ -10,11 +10,15 @@ import { Context as TeamTaskContext } from "../../context/TeamTaskContext";
 const AddTeamTask = ({ navigation }) => {
   const team = navigation.state.params.item;
 
-  // State to handle searchBar
-  const { state, addTask, addUser, clearMsg } = useContext(TeamTaskContext);
+  const { state, addTask, addUser, clearMsg, loadUser, setCheck } = useContext(
+    TeamTaskContext
+  );
 
   const [searchName, setSearchName] = useState("");
-  const [searchEmployee, setSearchEmployee] = useState("");
+
+  useEffect(() => {
+    loadUser(team.TID);
+  }, []);
 
   return (
     <ScrollView>
@@ -39,13 +43,19 @@ const AddTeamTask = ({ navigation }) => {
       />
       <Divider style={{ height: 3, marginVertical: 15 }} />
       <AddTaskForm addTask={addTask}>
-        <SearchBar
-          lightTheme
-          round
-          placeholder="Allocate task to"
-          value={searchEmployee}
-          onChangeText={setSearchEmployee}
-        />
+        <Text style={{ fontSize: 20, paddingLeft: 15 }}>Allocated To:</Text>
+        {state.employees.map((user) => {
+          return (
+            <CheckBox
+              key={user.username}
+              title={user.username}
+              checkedIcon="dot-circle-o"
+              uncheckedIcon="circle-o"
+              checked={user.check}
+              onPress={() => setCheck(user.username)}
+            />
+          );
+        })}
       </AddTaskForm>
     </ScrollView>
   );
