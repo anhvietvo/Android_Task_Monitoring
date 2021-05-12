@@ -20,6 +20,9 @@ const AddTeamTask = ({ navigation }) => {
     loadUser(TID);
   }, []);
 
+  // Simplify checkStatus in state.employees
+  const checkStatus = state.employees.filter(user => user.check)
+ 
   return (
     <ScrollView>
       <NavigationEvents onWillFocus={clearMsg} />
@@ -42,7 +45,7 @@ const AddTeamTask = ({ navigation }) => {
         }}
       />
       <Divider style={{ height: 3, marginVertical: 15 }} />
-      <AddTaskForm addTask={addTask} owner={TID} checkStatus={state.employees}>
+      <AddTaskForm addTask={addTask} owner={TID} checkStatus={checkStatus}>
         <Text style={{ fontSize: 20, paddingLeft: 15 }}>Allocated To:</Text>
         {state.employees.map((user) => {
           return (

@@ -7,7 +7,6 @@ import { createBottomTabNavigator } from "react-navigation-tabs";
 import LoginScreen from "./src/screens/AuthenScreens/LoginScreen";
 import InfoScreen from "./src/screens/InfoScreen";
 import PersonalScreen from "./src/screens/PersonalScreens/PersonalScreen";
-import TeamScreen from "./src/screens/TeamScreens/TeamScreen";
 import SignupScreen from "./src/screens/AuthenScreens/SignupScreen";
 import ResolveAuthScreen from "./src/screens/AuthenScreens/ResolveAuthScreen";
 import AddPersonalTask from "./src/screens/PersonalScreens/AddPersonalTask";
@@ -34,7 +33,7 @@ const switchNavigator = createSwitchNavigator({
       Add: AddPersonalTask,
     }),
     Team: createStackNavigator({
-      Team: TeamScreen,
+      //Team: TeamScreen,
       ManageTeams: ManageTeams,
       CreateTeam: CreateTeam,
       TeamTask: TeamTaskScreen,

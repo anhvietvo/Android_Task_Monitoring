@@ -25,7 +25,7 @@ const reducer = (state, action) => {
             title: action.payload.finishDate,
             data: [
               {
-                PTID: action.payload.PTID,
+                TTID: action.payload.TTID,
                 TID: action.payload.TID,
                 title: action.payload.title,
                 details: action.payload.details,
@@ -77,7 +77,8 @@ const addTask = (dispatch) => {
     startTime,
     finishDate,
     finishTime,
-    owner
+    owner,
+    checkStatus
   ) => {
     try {
       const TTID = Math.round(Math.random() * 99999);
@@ -94,6 +95,12 @@ const addTask = (dispatch) => {
         status,
       });
       console.log(res.data);
+      await checkStatus.map((user) => {
+        axios.post("/team/task/allocate", {
+          TTID,
+          username: user.username,
+        });
+      });
       dispatch({
         type: "addTask",
         payload: {
@@ -108,7 +115,11 @@ const addTask = (dispatch) => {
           status,
         },
       });
-      navigate("TeamTask", owner);
+      // Reset check state to false
+      checkStatus.map((user) =>
+        dispatch({ type: "setCheck", payload: user.username })
+      );
+      navigate("TeamTask");
     } catch (err) {
       console.log(err);
     }

@@ -37,7 +37,7 @@ const reducer = (state, action) => {
 
 // AddTaskForm will be used for both Personal and Team
 // so addTask must be assigned for suitable action
-const AddTaskForm = ({ addTask, children, owner, checkStatus }) => {
+const AddTaskForm = ({ addTask, children, owner, checkStatus = null }) => {
   // Context for action submit form
   //const { state } = useContext(AuthContext);
   //checkStatus.filter(task => console.log(task))
@@ -79,7 +79,7 @@ const AddTaskForm = ({ addTask, children, owner, checkStatus }) => {
         disabled={
           !Object.values(switchState).includes(false) &&
           title.replace(/\s/g, "").length &&
-          (checkStatus ? checkStatus.filter(user => user.check).length : true)
+          (checkStatus ? checkStatus.length : true)
             ? false
             : true
         }
@@ -91,7 +91,8 @@ const AddTaskForm = ({ addTask, children, owner, checkStatus }) => {
             startTime,
             finishDate,
             finishTime,
-            owner
+            owner,
+            checkStatus
             //(username = state.username)
           );
         }}
