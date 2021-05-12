@@ -18,11 +18,11 @@ const AddTeamTask = ({ navigation }) => {
 
   useEffect(() => {
     loadUser(TID);
-  }, [state.msg]);
+  }, []);
 
   // Simplify checkStatus in state.employees
-  const checkStatus = state.employees.filter(user => user.check)
- 
+  const checkStatus = state.employees.filter((user) => user.check);
+
   return (
     <ScrollView>
       <NavigationEvents onWillFocus={clearMsg} />
@@ -42,6 +42,7 @@ const AddTeamTask = ({ navigation }) => {
         title="Add User"
         onPress={() => {
           addUser(searchName, TID);
+          loadUser(TID);
         }}
       />
       <Divider style={{ height: 3, marginVertical: 15 }} />
