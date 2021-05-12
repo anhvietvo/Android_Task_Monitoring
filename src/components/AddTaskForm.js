@@ -4,8 +4,6 @@ import { Text, StyleSheet } from "react-native";
 import { Input, Button } from "react-native-elements";
 import SwitchComponent from "../components/SwitchComponent";
 
-import { Context as AuthContext } from "../context/AuthContext";
-
 const reducer = (state, action) => {
   switch (action.type) {
     case "switch_day":
@@ -39,9 +37,10 @@ const reducer = (state, action) => {
 
 // AddTaskForm will be used for both Personal and Team
 // so addTask must be assigned for suitable action
-const AddTaskForm = ({ addTask, children }) => {
+const AddTaskForm = ({ addTask, children, owner, checkStatus }) => {
   // Context for action submit form
-  const { state } = useContext(AuthContext);
+  //const { state } = useContext(AuthContext);
+  //checkStatus.filter(task => console.log(task))
 
   // State handle form value
   const [title, setTitle] = useState("");
@@ -79,7 +78,8 @@ const AddTaskForm = ({ addTask, children }) => {
         title="Add Task"
         disabled={
           !Object.values(switchState).includes(false) &&
-          title.replace(/\s/g, "").length
+          title.replace(/\s/g, "").length &&
+          (checkStatus ? checkStatus.filter(user => user.check).length : true)
             ? false
             : true
         }
@@ -91,7 +91,8 @@ const AddTaskForm = ({ addTask, children }) => {
             startTime,
             finishDate,
             finishTime,
-            (username = state.username)
+            owner
+            //(username = state.username)
           );
         }}
       />

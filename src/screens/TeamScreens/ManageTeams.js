@@ -47,7 +47,7 @@ const ManageTeams = ({ navigation }) => {
             return (
               <TouchableOpacity
                 style={styles.btn}
-                onPress={() => navigation.navigate("TeamTask", { item })}
+                onPress={() => navigation.navigate("TeamTask", item.TID )}
               >
                 <Text style={styles.text}>{item.name}</Text>
               </TouchableOpacity>

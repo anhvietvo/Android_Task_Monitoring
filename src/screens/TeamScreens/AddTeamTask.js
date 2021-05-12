@@ -8,7 +8,7 @@ import AddTaskForm from "../../components/AddTaskForm";
 import { Context as TeamTaskContext } from "../../context/TeamTaskContext";
 
 const AddTeamTask = ({ navigation }) => {
-  const team = navigation.state.params.item;
+  const TID = navigation.state.params;
 
   const { state, addTask, addUser, clearMsg, loadUser, setCheck } = useContext(
     TeamTaskContext
@@ -17,7 +17,7 @@ const AddTeamTask = ({ navigation }) => {
   const [searchName, setSearchName] = useState("");
 
   useEffect(() => {
-    loadUser(team.TID);
+    loadUser(TID);
   }, []);
 
   return (
@@ -38,11 +38,11 @@ const AddTeamTask = ({ navigation }) => {
         disabled={searchName.replace(/\s/g, "").length ? false : true}
         title="Add User"
         onPress={() => {
-          addUser(searchName, team.TID);
+          addUser(searchName, TID);
         }}
       />
       <Divider style={{ height: 3, marginVertical: 15 }} />
-      <AddTaskForm addTask={addTask}>
+      <AddTaskForm addTask={addTask} owner={TID} checkStatus={state.employees}>
         <Text style={{ fontSize: 20, paddingLeft: 15 }}>Allocated To:</Text>
         {state.employees.map((user) => {
           return (

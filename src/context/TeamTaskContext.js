@@ -1,9 +1,44 @@
 import createDataContext from "./createDataContext";
 
 import axios from "../api/axios";
+import { navigate } from "../navigationRef";
 
 const reducer = (state, action) => {
   switch (action.type) {
+    case "addTask":
+      for (let i = 0; i < state.task.length; i++) {
+        if (state.task[i].title === action.payload.finishDate) {
+          // Check have empty  before or not
+          if (_.isEmpty(state.task[i].data[0])) {
+            state.task[i].data[0] = action.payload;
+          } else {
+            state.task[i].data.push(action.payload);
+          }
+          return { ...state };
+        }
+      }
+      return {
+        ...state,
+        task: [
+          ...state.task,
+          {
+            title: action.payload.finishDate,
+            data: [
+              {
+                PTID: action.payload.PTID,
+                TID: action.payload.TID,
+                title: action.payload.title,
+                details: action.payload.details,
+                startDate: action.payload.startDate,
+                startTime: action.payload.startTime,
+                finishDate: action.payload.finishDate,
+                finishTime: action.payload.finishTime,
+                status: action.payload.status,
+              },
+            ],
+          },
+        ],
+      };
     case "setCheck":
       state.employees.map((user) => {
         if (user.username === action.payload) {
@@ -34,7 +69,50 @@ const clearMsg = (dispatch) => () => {
 
 // TODO: Initialize add team task
 const addTask = (dispatch) => {
-  return;
+  return async (
+    //TID,
+    title,
+    details,
+    startDate,
+    startTime,
+    finishDate,
+    finishTime,
+    owner
+  ) => {
+    try {
+      const TTID = Math.round(Math.random() * 99999);
+      const status = 0;
+      const res = await axios.post("/team/task/add", {
+        TTID,
+        TID: owner,
+        title,
+        details,
+        startDate,
+        startTime,
+        finishDate,
+        finishTime,
+        status,
+      });
+      console.log(res.data);
+      dispatch({
+        type: "addTask",
+        payload: {
+          TTID,
+          TID: owner,
+          title,
+          details,
+          startDate,
+          startTime,
+          finishDate,
+          finishTime,
+          status,
+        },
+      });
+      navigate("TeamTask", owner);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 };
 
 const addUser = (dispatch) => {
@@ -74,6 +152,6 @@ const setCheck = (dispatch) => {
 
 export const { Provider, Context } = createDataContext(
   reducer,
-  { addTask, addUser, clearMsg, loadUser, setCheck },
+  { addTask, addUser, clearMsg, loadUser, setCheck, addTask },
   { msg: "", employees: [], task: [] }
 );

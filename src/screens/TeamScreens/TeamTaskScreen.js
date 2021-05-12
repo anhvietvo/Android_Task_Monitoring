@@ -9,12 +9,15 @@ import { Context as TeamTaskContext } from "../../context/TeamTaskContext";
 
 const TeamTaskScreen = ({ navigation }) => {
   const { state } = useContext(TeamTaskContext);
+  const TID = navigation.state.params;
 
-  const sortedState = state.task.sort((a, b) => {
-    const aDate = new Date(a.title);
-    const bDate = new Date(b.title);
-    return aDate - bDate;
-  });
+  const sortedState = state.task
+    .filter((task) => task.data[0].TID === TID)
+    .sort((a, b) => {
+      const aDate = new Date(a.title);
+      const bDate = new Date(b.title);
+      return aDate - bDate;
+    });
 
   return (
     <SafeAreaView forceInset={{ top: "always" }} style={{ flex: 1 }}>
@@ -24,7 +27,7 @@ const TeamTaskScreen = ({ navigation }) => {
       <FAB
         title="Add"
         placement="right"
-        onPress={() => navigation.navigate("Add", navigation.state.params)}
+        onPress={() => navigation.navigate("Add", TID)}
       />
     </SafeAreaView>
   );
