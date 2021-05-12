@@ -28,6 +28,7 @@ const PersonalScreen = ({ navigation }) => {
     <SafeAreaView forceInset={{ top: "always" }} style={{ flex: 1 }}>
       <CalendarBar marked={sortedState}>
         <TaskList
+          refresh={()=>loadTask(authContext.state.username)}
           sortedState={sortedState}
           updateStatus={updateStatus}
           deleteTask={deleteTask}

@@ -1,5 +1,13 @@
-import React from "react";
-import { Alert, StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import React, { useState, useCallback } from "react";
+import {
+  Alert,
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  RefreshControl,
+  ScrollView,
+} from "react-native";
 import _ from "lodash";
 import { AgendaList } from "react-native-calendars";
 
@@ -104,22 +112,46 @@ const renderItem = ({ item }, updateStatus, deleteTask) => {
   );
 };
 
-const TaskList = ({ sortedState, updateStatus, deleteTask }) => {
+const wait = (timeout) => {
+  return new Promise((resolve) => setTimeout(resolve, timeout));
+};
+
+const TaskList = ({ sortedState, updateStatus, deleteTask, refresh }) => {
+  // Control pull down flat list to refresh
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => {
+      refresh();
+      setRefreshing(false);
+    });
+  }, []);
+
   return sortedState.length ? (
     <AgendaList
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
       sections={sortedState}
       extraData={sortedState}
       renderItem={(item) => renderItem(item, updateStatus, deleteTask)}
     />
   ) : (
-    <Text
-      style={[
-        styles.emptyItemText,
-        { flex: 1, fontSize: 30, marginTop: 20, alignSelf: "center" },
-      ]}
+    <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
     >
-      No Events Planned
-    </Text>
+      <Text
+        style={[
+          styles.emptyItemText,
+          { flex: 1, fontSize: 30, marginTop: 20, alignSelf: "center" },
+        ]}
+      >
+        No Events Planned
+      </Text>
+    </ScrollView>
   );
 };
 

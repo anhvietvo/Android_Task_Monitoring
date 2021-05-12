@@ -26,7 +26,10 @@ const ManageTeams = ({ navigation }) => {
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    wait(2000).then(() => setRefreshing(false));
+    wait(2000).then(() => {
+      loadTeam(authContext.state.username);
+      setRefreshing(false);
+    });
   }, []);
 
   // Load Team in db to render every time ManageTeams Screen re-render
@@ -47,7 +50,7 @@ const ManageTeams = ({ navigation }) => {
             return (
               <TouchableOpacity
                 style={styles.btn}
-                onPress={() => navigation.navigate("TeamTask", item.TID )}
+                onPress={() => navigation.navigate("TeamTask", item.TID)}
               >
                 <Text style={styles.text}>{item.name}</Text>
               </TouchableOpacity>

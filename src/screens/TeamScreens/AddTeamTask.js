@@ -18,7 +18,7 @@ const AddTeamTask = ({ navigation }) => {
 
   useEffect(() => {
     loadUser(TID);
-  }, []);
+  }, [state.msg]);
 
   // Simplify checkStatus in state.employees
   const checkStatus = state.employees.filter(user => user.check)

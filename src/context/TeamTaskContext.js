@@ -132,8 +132,6 @@ const addUser = (dispatch) => {
       const res = await axios.post("/team/user", { username, TID });
       console.log(res.data);
       dispatch({ type: "addMsg", payload: "Add succesfully" });
-      // After add re-load array of employees
-      loadUser(TID);
     } catch (err) {
       dispatch({
         type: "addMsg",
