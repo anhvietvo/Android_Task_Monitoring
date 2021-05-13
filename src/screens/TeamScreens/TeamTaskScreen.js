@@ -33,7 +33,10 @@ const TeamTaskScreen = ({ navigation }) => {
     <SafeAreaView forceInset={{ top: "always" }} style={{ flex: 1 }}>
       <NavigationEvents onWillFocus={clearEmpty} />
       <CalendarBar marked={sortedState} addEmpty={addEmpty}>
-        <TaskList sortedState={sortedState} />
+        <TaskList
+          refresh={() => loadTask(username, TID, manager)}
+          sortedState={sortedState}
+        />
       </CalendarBar>
       <FAB
         title="Add"
