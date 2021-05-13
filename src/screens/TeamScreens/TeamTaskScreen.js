@@ -11,7 +11,14 @@ import { Context as AuthContext } from "../../context/AuthContext";
 import _ from "lodash";
 
 const TeamTaskScreen = ({ navigation }) => {
-  const { state, addEmpty, clearEmpty, loadTask } = useContext(TeamTaskContext);
+  const {
+    state,
+    addEmpty,
+    clearEmpty,
+    loadTask,
+    updateStatus,
+    deleteTask,
+  } = useContext(TeamTaskContext);
   const team = navigation.state.params;
   const TID = team.TID;
   const manager = team.manager;
@@ -36,6 +43,9 @@ const TeamTaskScreen = ({ navigation }) => {
         <TaskList
           refresh={() => loadTask(username, TID, manager)}
           sortedState={sortedState}
+          updateStatus={updateStatus}
+          deleteTask={deleteTask}
+          canDelete={manager == username}
         />
       </CalendarBar>
       <FAB

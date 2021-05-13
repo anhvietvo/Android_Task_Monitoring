@@ -73,6 +73,23 @@ const reducer = (state, action) => {
         ...state,
         task: state.task.filter((task) => !_.isEmpty(task.data[0])),
       };
+    case "updateStatus":
+      state.task.map((day) => {
+        day.data.map((task) => {
+          task.TTID === action.payload.TTID
+            ? (task.status = action.payload.status)
+            : task;
+        });
+      });
+      return { ...state };
+    case "deleteTask":
+      state.task.forEach((item) => {
+        const taskData = item.data.filter(
+          (task) => task.TTID !== action.payload
+        );
+        item.data = taskData.length ? taskData : [{}];
+      });
+      return { ...state };
     case "setCheck":
       state.employees.map((user) => {
         if (user.username === action.payload) {
@@ -221,6 +238,33 @@ const clearEmpty = (dispatch) => {
   };
 };
 
+const updateStatus = (dispatch) => {
+  return async (TTID, status) => {
+    try {
+      const res = await axios.post("/team/task/edit", { TTID, status });
+      console.log(res.data);
+
+      dispatch({ type: "updateStatus", payload: { TTID, status } });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+};
+
+const deleteTask = (dispatch) => {
+  return async (TTID) => {
+    // Delete from db
+    try {
+      const res = await axios.post("/team/task/delete", { TTID });
+      console.log(res.data);
+      // Delete from state
+      dispatch({ type: "deleteTask", payload: TTID });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+};
+
 const addUser = (dispatch) => {
   return async (username, TID) => {
     try {
@@ -266,6 +310,8 @@ export const { Provider, Context } = createDataContext(
     addEmpty,
     clearEmpty,
     loadTask,
+    updateStatus,
+    deleteTask,
   },
   { msg: "", employees: [], task: [] }
 );

@@ -12,22 +12,26 @@ import _ from "lodash";
 import { AgendaList } from "react-native-calendars";
 
 const buttonPressed = (item, updateStatus) => {
+  var ID;
+  "PTID" in item ? (ID = item.PTID) : (ID = item.TTID);
   Alert.alert("Are you done?", "", [
     {
       text: "Not yet",
-      onPress: () => updateStatus(item.PTID, 0),
+      onPress: () => updateStatus(ID, 0),
       style: "cancel",
     },
     {
       text: "OK",
       onPress: () => {
-        updateStatus(item.PTID, 1);
+        updateStatus(ID, 1);
       },
     },
   ]);
 };
 
-const itemPressed = (item, deleteTask) => {
+const itemPressed = (item, deleteTask, canDelete) => {
+  var ID;
+  "PTID" in item ? (ID = item.PTID) : (ID = item.TTID);
   Alert.alert(
     item.title,
     item.details
@@ -41,14 +45,20 @@ const itemPressed = (item, deleteTask) => {
       },
       {
         text: "Delete",
-        onPress: () => deleteTask(item.PTID),
+        onPress: () => {
+          if (canDelete) deleteTask(ID);
+          else
+            Alert.alert(
+              "You cannot delete this task. This action need a manager."
+            );
+        },
         style: "destructive",
       },
     ]
   );
 };
 
-const renderItem = ({ item }, updateStatus, deleteTask) => {
+const renderItem = ({ item }, updateStatus, deleteTask, canDelete) => {
   if (_.isEmpty(item)) {
     return (
       <View style={styles.emptyItem}>
@@ -71,7 +81,7 @@ const renderItem = ({ item }, updateStatus, deleteTask) => {
 
   return (
     <TouchableOpacity
-      onPress={() => itemPressed(item, deleteTask)}
+      onPress={() => itemPressed(item, deleteTask, canDelete)}
       style={styles.item}
     >
       <View style={{ width: 65 }}>
@@ -116,7 +126,13 @@ const wait = (timeout) => {
   return new Promise((resolve) => setTimeout(resolve, timeout));
 };
 
-const TaskList = ({ sortedState, updateStatus, deleteTask, refresh }) => {
+const TaskList = ({
+  sortedState,
+  updateStatus,
+  deleteTask,
+  refresh,
+  canDelete = true,
+}) => {
   // Control pull down flat list to refresh
   const [refreshing, setRefreshing] = useState(false);
 
@@ -135,7 +151,9 @@ const TaskList = ({ sortedState, updateStatus, deleteTask, refresh }) => {
       }
       sections={sortedState}
       extraData={sortedState}
-      renderItem={(item) => renderItem(item, updateStatus, deleteTask)}
+      renderItem={(item) =>
+        renderItem(item, updateStatus, deleteTask, canDelete)
+      }
     />
   ) : (
     <ScrollView
