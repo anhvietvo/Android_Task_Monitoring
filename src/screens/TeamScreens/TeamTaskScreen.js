@@ -4,15 +4,17 @@ import { FAB } from "react-native-elements";
 
 import CalendarBar from "../../components/CalendarBar";
 import { SafeAreaView } from "react-navigation";
+import { NavigationEvents } from "react-navigation";
 
 import { Context as TeamTaskContext } from "../../context/TeamTaskContext";
+import _ from "lodash";
 
 const TeamTaskScreen = ({ navigation }) => {
-  const { state } = useContext(TeamTaskContext);
+  const { state, addEmpty, clearEmpty } = useContext(TeamTaskContext);
   const TID = navigation.state.params;
 
   const sortedState = state.task
-    .filter((task) => task.data[0].TID === TID)
+    .filter((task) => task.data[0].TID === TID || _.isEmpty(task.data[0]))
     .sort((a, b) => {
       const aDate = new Date(a.title);
       const bDate = new Date(b.title);
@@ -21,7 +23,8 @@ const TeamTaskScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView forceInset={{ top: "always" }} style={{ flex: 1 }}>
-      <CalendarBar marked={sortedState}>
+      <NavigationEvents onWillFocus={clearEmpty} />
+      <CalendarBar marked={sortedState} addEmpty={addEmpty}>
         <TaskList sortedState={sortedState} />
       </CalendarBar>
       <FAB

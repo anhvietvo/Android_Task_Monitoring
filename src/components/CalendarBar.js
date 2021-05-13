@@ -2,10 +2,10 @@ import React, { useContext } from "react";
 import _ from "lodash";
 
 import { CalendarProvider, ExpandableCalendar } from "react-native-calendars";
-import { Context as TaskContext } from "../context/TaskContext";
+//import { Context as TaskContext } from "../context/TaskContext";
 
-const CalendarBar = ({ marked, children }) => {
-  const { addEmpty } = useContext(TaskContext);
+const CalendarBar = ({ marked, children, addEmpty }) => {
+  //const { addEmpty } = useContext(TaskContext);
   const offset = new Date().getTimezoneOffset() * 60000; // Get offset between local timezone and UTC in miliseconds
   const today = new Date(Date.now() - offset).toISOString().split("T")[0];
 

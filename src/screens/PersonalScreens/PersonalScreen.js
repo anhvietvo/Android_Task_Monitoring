@@ -10,7 +10,9 @@ import { Context as TaskContext } from "../../context/TaskContext";
 import { Context as AuthContext } from "../../context/AuthContext";
 
 const PersonalScreen = ({ navigation }) => {
-  const { state, updateStatus, loadTask, deleteTask } = useContext(TaskContext);
+  const { state, updateStatus, loadTask, deleteTask, addEmpty } = useContext(
+    TaskContext
+  );
   const authContext = useContext(AuthContext);
 
   // Sort the state to render in ascending order
@@ -26,9 +28,9 @@ const PersonalScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView forceInset={{ top: "always" }} style={{ flex: 1 }}>
-      <CalendarBar marked={sortedState}>
+      <CalendarBar marked={sortedState} addEmpty={addEmpty}>
         <TaskList
-          refresh={()=>loadTask(authContext.state.username)}
+          refresh={() => loadTask(authContext.state.username)}
           sortedState={sortedState}
           updateStatus={updateStatus}
           deleteTask={deleteTask}

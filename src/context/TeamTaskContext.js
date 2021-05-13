@@ -3,6 +3,8 @@ import createDataContext from "./createDataContext";
 import axios from "../api/axios";
 import { navigate } from "../navigationRef";
 
+import _ from "lodash";
+
 const reducer = (state, action) => {
   switch (action.type) {
     case "addTask":
@@ -38,6 +40,38 @@ const reducer = (state, action) => {
             ],
           },
         ],
+      };
+    case "addEmpty":
+      var checkHasEmpty = false;
+      const changeEmptyElement = state.task.map((task) => {
+        if (_.isEmpty(task.data[0])) {
+          checkHasEmpty = true;
+          return {
+            title: action.payload,
+            data: [{}],
+          };
+        }
+        return task;
+      });
+      return checkHasEmpty
+        ? {
+            ...state,
+            task: changeEmptyElement,
+          }
+        : {
+            ...state,
+            task: [
+              ...state.task,
+              {
+                title: action.payload,
+                data: [{}],
+              },
+            ],
+          };
+    case "clearEmpty":
+      return {
+        ...state,
+        task: state.task.filter((task) => !_.isEmpty(task.data[0])),
       };
     case "setCheck":
       state.employees.map((user) => {
@@ -126,6 +160,18 @@ const addTask = (dispatch) => {
   };
 };
 
+const addEmpty = (dispatch) => {
+  return (date) => {
+    dispatch({ type: "addEmpty", payload: date });
+  };
+};
+
+const clearEmpty = (dispatch) => {
+  return () => {
+    dispatch({ type: "clearEmpty" });
+  };
+};
+
 const addUser = (dispatch) => {
   return async (username, TID) => {
     try {
@@ -161,6 +207,15 @@ const setCheck = (dispatch) => {
 
 export const { Provider, Context } = createDataContext(
   reducer,
-  { addTask, addUser, clearMsg, loadUser, setCheck, addTask },
+  {
+    addTask,
+    addUser,
+    clearMsg,
+    loadUser,
+    setCheck,
+    addTask,
+    addEmpty,
+    clearEmpty,
+  },
   { msg: "", employees: [], task: [] }
 );
