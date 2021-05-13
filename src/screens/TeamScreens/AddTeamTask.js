@@ -9,7 +9,9 @@ import { Context as TeamTaskContext } from "../../context/TeamTaskContext";
 import { Context as AuthContext } from "../../context/AuthContext";
 
 const AddTeamTask = ({ navigation }) => {
-  const TID = navigation.state.params;
+  const team = navigation.state.params;
+  const TID = team.TID;
+  const manager = team.manager;
 
   const { state, addTask, addUser, clearMsg, loadUser, setCheck } = useContext(
     TeamTaskContext
@@ -49,7 +51,7 @@ const AddTeamTask = ({ navigation }) => {
         }}
       />
       <Divider style={{ height: 3, marginVertical: 15 }} />
-      <AddTaskForm addTask={addTask} owner={{TID, username}} checkStatus={checkStatus}>
+      <AddTaskForm addTask={addTask} owner={{TID, username, manager}} checkStatus={checkStatus}>
         <Text style={{ fontSize: 20, paddingLeft: 15 }}>Allocated To:</Text>
         {state.employees.map((user) => {
           return (

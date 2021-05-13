@@ -12,11 +12,13 @@ import _ from "lodash";
 
 const TeamTaskScreen = ({ navigation }) => {
   const { state, addEmpty, clearEmpty, loadTask } = useContext(TeamTaskContext);
-  const TID = navigation.state.params;
+  const team = navigation.state.params;
+  const TID = team.TID;
+  const manager = team.manager;
   const username = useContext(AuthContext).state.username;
 
   useEffect(() => {
-    loadTask(username, TID);
+    loadTask(username, TID, manager);
   }, []);
 
   const sortedState = state.task
@@ -36,7 +38,7 @@ const TeamTaskScreen = ({ navigation }) => {
       <FAB
         title="Add"
         placement="right"
-        onPress={() => navigation.navigate("Add", TID)}
+        onPress={() => navigation.navigate("Add", team)}
       />
     </SafeAreaView>
   );

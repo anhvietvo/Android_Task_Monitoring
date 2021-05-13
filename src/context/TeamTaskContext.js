@@ -105,22 +105,38 @@ const clearMsg = (dispatch) => () => {
 
 // Load Task from db to TeamTaskScreen
 const loadTask = (dispatch) => {
-  return async (username, TID) => {
+  return async (username, TID, manager) => {
     dispatch({ type: "clearTask" });
     try {
-      const res = await axios.post("/team/task", { username, TID });
-      return res.data.map((row) => {
-        return dispatch({
-          type: "addTask",
-          payload: {
-            ...row,
-            startDate: row.startDate.slice(0, 10),
-            startTime: row.startTime.slice(0, 5),
-            finishDate: row.finishDate.slice(0, 10),
-            finishTime: row.finishTime.slice(0, 5),
-          },
+      if (username === manager) {
+        const res = await axios.post("/team/task", { TID });
+        return res.data.map((row) => {
+          return dispatch({
+            type: "addTask",
+            payload: {
+              ...row,
+              startDate: row.startDate.slice(0, 10),
+              startTime: row.startTime.slice(0, 5),
+              finishDate: row.finishDate.slice(0, 10),
+              finishTime: row.finishTime.slice(0, 5),
+            },
+          });
         });
-      });
+      } else {
+        const res = await axios.post("/team/task", { username, TID });
+        return res.data.map((row) => {
+          return dispatch({
+            type: "addTask",
+            payload: {
+              ...row,
+              startDate: row.startDate.slice(0, 10),
+              startTime: row.startTime.slice(0, 5),
+              finishDate: row.finishDate.slice(0, 10),
+              finishTime: row.finishTime.slice(0, 5),
+            },
+          });
+        });
+      }
     } catch (err) {
       console.log(err);
     }
@@ -166,7 +182,7 @@ const addTask = (dispatch) => {
           taskBelongsToAdder = true;
         }
       });
-      if (taskBelongsToAdder) {
+      if (taskBelongsToAdder || owner.username == owner.manager) {
         dispatch({
           type: "addTask",
           payload: {
