@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import TaskList from "../../components/TaskList";
 import { FAB } from "react-native-elements";
 
@@ -7,11 +7,17 @@ import { SafeAreaView } from "react-navigation";
 import { NavigationEvents } from "react-navigation";
 
 import { Context as TeamTaskContext } from "../../context/TeamTaskContext";
+import { Context as AuthContext } from "../../context/AuthContext";
 import _ from "lodash";
 
 const TeamTaskScreen = ({ navigation }) => {
-  const { state, addEmpty, clearEmpty } = useContext(TeamTaskContext);
+  const { state, addEmpty, clearEmpty, loadTask } = useContext(TeamTaskContext);
   const TID = navigation.state.params;
+  const username = useContext(AuthContext).state.username;
+
+  useEffect(() => {
+    loadTask(username, TID);
+  }, []);
 
   const sortedState = state.task
     .filter((task) => task.data[0].TID === TID || _.isEmpty(task.data[0]))

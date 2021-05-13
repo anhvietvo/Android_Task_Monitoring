@@ -92,6 +92,8 @@ const reducer = (state, action) => {
       return { ...state, msg: action.payload };
     case "clearMsg":
       return { ...state, msg: "" };
+    case "clearTask":
+      return { ...state, task: [] };
     default:
       return state;
   }
@@ -99,6 +101,30 @@ const reducer = (state, action) => {
 
 const clearMsg = (dispatch) => () => {
   dispatch({ type: "clearMsg" });
+};
+
+// Load Task from db to TeamTaskScreen
+const loadTask = (dispatch) => {
+  return async (username, TID) => {
+    dispatch({ type: "clearTask" });
+    try {
+      const res = await axios.post("/team/task", { username, TID });
+      return res.data.map((row) => {
+        return dispatch({
+          type: "addTask",
+          payload: {
+            ...row,
+            startDate: row.startDate.slice(0, 10),
+            startTime: row.startTime.slice(0, 5),
+            finishDate: row.finishDate.slice(0, 10),
+            finishTime: row.finishTime.slice(0, 5),
+          },
+        });
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
 };
 
 // TODO: Initialize add team task
@@ -119,7 +145,7 @@ const addTask = (dispatch) => {
       const status = 0;
       const res = await axios.post("/team/task/add", {
         TTID,
-        TID: owner,
+        TID: owner.TID,
         title,
         details,
         startDate,
@@ -129,26 +155,33 @@ const addTask = (dispatch) => {
         status,
       });
       console.log(res.data);
+      // Check this task is belong to user who added or not
+      var taskBelongsToAdder = false;
       await checkStatus.map((user) => {
         axios.post("/team/task/allocate", {
           TTID,
           username: user.username,
         });
+        if (user.username === owner.username) {
+          taskBelongsToAdder = true;
+        }
       });
-      dispatch({
-        type: "addTask",
-        payload: {
-          TTID,
-          TID: owner,
-          title,
-          details,
-          startDate,
-          startTime,
-          finishDate,
-          finishTime,
-          status,
-        },
-      });
+      if (taskBelongsToAdder) {
+        dispatch({
+          type: "addTask",
+          payload: {
+            TTID,
+            TID: owner.TID,
+            title,
+            details,
+            startDate,
+            startTime,
+            finishDate,
+            finishTime,
+            status,
+          },
+        });
+      }
       // Reset check state to false
       checkStatus.map((user) =>
         dispatch({ type: "setCheck", payload: user.username })
@@ -216,6 +249,7 @@ export const { Provider, Context } = createDataContext(
     addTask,
     addEmpty,
     clearEmpty,
+    loadTask,
   },
   { msg: "", employees: [], task: [] }
 );

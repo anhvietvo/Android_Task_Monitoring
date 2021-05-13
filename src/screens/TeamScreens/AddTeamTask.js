@@ -6,6 +6,7 @@ import { NavigationEvents } from "react-navigation";
 import AddTaskForm from "../../components/AddTaskForm";
 
 import { Context as TeamTaskContext } from "../../context/TeamTaskContext";
+import { Context as AuthContext } from "../../context/AuthContext";
 
 const AddTeamTask = ({ navigation }) => {
   const TID = navigation.state.params;
@@ -14,13 +15,15 @@ const AddTeamTask = ({ navigation }) => {
     TeamTaskContext
   );
 
+  const username = useContext(AuthContext).state.username;
+
   const [searchName, setSearchName] = useState("");
 
   useEffect(() => {
     loadUser(TID);
   }, []);
 
-  // Simplify checkStatus in state.employees
+  // Get the array of user who is checked
   const checkStatus = state.employees.filter((user) => user.check);
 
   return (
@@ -46,7 +49,7 @@ const AddTeamTask = ({ navigation }) => {
         }}
       />
       <Divider style={{ height: 3, marginVertical: 15 }} />
-      <AddTaskForm addTask={addTask} owner={TID} checkStatus={checkStatus}>
+      <AddTaskForm addTask={addTask} owner={{TID, username}} checkStatus={checkStatus}>
         <Text style={{ fontSize: 20, paddingLeft: 15 }}>Allocated To:</Text>
         {state.employees.map((user) => {
           return (
