@@ -1,32 +1,37 @@
-import React, { useContext, useEffect } from "react";
-import { Alert, StyleSheet, View, Text, TouchableOpacity } from "react-native";
-
-import CalendarBar from "../components/CalendarBar";
-import { SafeAreaView } from "react-navigation";
-import { AgendaList } from "react-native-calendars";
+import React, { useState, useCallback } from "react";
+import {
+  Alert,
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  RefreshControl,
+  ScrollView,
+} from "react-native";
 import _ from "lodash";
-import { FAB } from "react-native-elements";
-
-import { Context as TaskContext } from "../context/TaskContext";
-import { Context as AuthContext } from "../context/AuthContext";
+import { AgendaList } from "react-native-calendars";
 
 const buttonPressed = (item, updateStatus) => {
+  var ID;
+  "PTID" in item ? (ID = item.PTID) : (ID = item.TTID);
   Alert.alert("Are you done?", "", [
     {
       text: "Not yet",
-      onPress: () => updateStatus(item.PTID, 0),
+      onPress: () => updateStatus(ID, 0),
       style: "cancel",
     },
     {
       text: "OK",
       onPress: () => {
-        updateStatus(item.PTID, 1);
+        updateStatus(ID, 1);
       },
     },
   ]);
 };
 
-const itemPressed = (item, deleteTask) => {
+const itemPressed = (item, deleteTask, canDelete) => {
+  var ID;
+  "PTID" in item ? (ID = item.PTID) : (ID = item.TTID);
   Alert.alert(
     item.title,
     item.details
@@ -40,14 +45,20 @@ const itemPressed = (item, deleteTask) => {
       },
       {
         text: "Delete",
-        onPress: () => deleteTask(item.PTID),
+        onPress: () => {
+          if (canDelete) deleteTask(ID);
+          else
+            Alert.alert(
+              "You cannot delete this task. This action need a manager."
+            );
+        },
         style: "destructive",
       },
     ]
   );
 };
 
-const renderItem = ({ item }, updateStatus, deleteTask) => {
+const renderItem = ({ item }, updateStatus, deleteTask, canDelete) => {
   if (_.isEmpty(item)) {
     return (
       <View style={styles.emptyItem}>
@@ -70,7 +81,7 @@ const renderItem = ({ item }, updateStatus, deleteTask) => {
 
   return (
     <TouchableOpacity
-      onPress={() => itemPressed(item, deleteTask)}
+      onPress={() => itemPressed(item, deleteTask, canDelete)}
       style={styles.item}
     >
       <View style={{ width: 65 }}>
@@ -111,54 +122,55 @@ const renderItem = ({ item }, updateStatus, deleteTask) => {
   );
 };
 
-const PersonalScreen = ({ navigation }) => {
-  const { state, updateStatus, loadTask, deleteTask } = useContext(TaskContext);
-  const authContext = useContext(AuthContext);
-
-  // Sort the state to render in ascending order
-  const sortedState = state.sort((a, b) => {
-    const aDate = new Date(a.title);
-    const bDate = new Date(b.title);
-    return aDate - bDate;
-  });
-
-  useEffect(() => {
-    loadTask(authContext.state.username);
-  }, []);
-
-  return (
-    <SafeAreaView forceInset={{ top: "always" }} style={{ flex: 1 }}>
-      <CalendarBar marked={sortedState}>
-        {sortedState.length ? (
-          <AgendaList
-            sections={sortedState}
-            extraData={state}
-            renderItem={(item) => renderItem(item, updateStatus, deleteTask)}
-          />
-        ) : (
-          <Text
-            style={[
-              styles.emptyItemText,
-              { flex: 1, fontSize: 30, marginTop: 20, alignSelf: "center" },
-            ]}
-          >
-            No Events Planned
-          </Text>
-        )}
-      </CalendarBar>
-      <FAB
-        title="Add"
-        placement="right"
-        onPress={() => navigation.navigate("Add")}
-      />
-    </SafeAreaView>
-  );
+const wait = (timeout) => {
+  return new Promise((resolve) => setTimeout(resolve, timeout));
 };
 
-PersonalScreen.navigationOptions = () => {
-  return {
-    headerShown: false,
-  };
+const TaskList = ({
+  sortedState,
+  updateStatus,
+  deleteTask,
+  refresh,
+  canDelete = true,
+}) => {
+  // Control pull down flat list to refresh
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => {
+      refresh();
+      setRefreshing(false);
+    });
+  }, []);
+
+  return sortedState.length ? (
+    <AgendaList
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+      sections={sortedState}
+      extraData={sortedState}
+      renderItem={(item) =>
+        renderItem(item, updateStatus, deleteTask, canDelete)
+      }
+    />
+  ) : (
+    <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
+      <Text
+        style={[
+          styles.emptyItemText,
+          { flex: 1, fontSize: 30, marginTop: 20, alignSelf: "center" },
+        ]}
+      >
+        No Events Planned
+      </Text>
+    </ScrollView>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -210,4 +222,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PersonalScreen;
+export default TaskList;

@@ -79,7 +79,8 @@ const addTask = (dispatch) => {
     startTime,
     finishDate,
     finishTime,
-    username
+    owner
+    //username
   ) => {
     try {
       const PTID = Math.round(Math.random() * 99999);
@@ -93,7 +94,8 @@ const addTask = (dispatch) => {
         finishDate,
         finishTime,
         status,
-        username,
+        owner
+        //username,
       });
       console.log(res.data);
       dispatch({

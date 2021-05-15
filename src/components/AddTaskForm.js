@@ -1,11 +1,8 @@
 import React, { useReducer, useContext, useState } from "react";
-import { Text, ScrollView } from "react-native";
+import { Text, StyleSheet } from "react-native";
 
 import { Input, Button } from "react-native-elements";
 import SwitchComponent from "../components/SwitchComponent";
-
-import { Context as TaskContext } from "../context/TaskContext";
-import { Context as AuthContext } from "../context/AuthContext";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -38,10 +35,12 @@ const reducer = (state, action) => {
   }
 };
 
-const AddTaskForm = () => {
+// AddTaskForm will be used for both Personal and Team
+// so addTask must be assigned for suitable action
+const AddTaskForm = ({ addTask, children, owner, checkStatus = null }) => {
   // Context for action submit form
-  const { addTask } = useContext(TaskContext);
-  const { state } = useContext(AuthContext);
+  //const { state } = useContext(AuthContext);
+  //checkStatus.filter(task => console.log(task))
 
   // State handle form value
   const [title, setTitle] = useState("");
@@ -60,10 +59,11 @@ const AddTaskForm = () => {
   });
 
   return (
-    <ScrollView>
-      <Text style={{ fontSize: 45 }}>Add Task Form</Text>
+    <>
+      <Text style={{ fontSize: 35 }}>Add Task Form</Text>
       <Input placeholder="Title" value={title} onChangeText={setTitle} />
       <Input placeholder="Details" value={details} onChangeText={setDetails} />
+      {children}
       <SwitchComponent
         name="Start"
         state={{ switchState, startDate, startTime }}
@@ -78,7 +78,8 @@ const AddTaskForm = () => {
         title="Add Task"
         disabled={
           !Object.values(switchState).includes(false) &&
-          title.replace(/\s/g, "").length
+          title.replace(/\s/g, "").length &&
+          (checkStatus ? checkStatus.length : true)
             ? false
             : true
         }
@@ -90,18 +91,16 @@ const AddTaskForm = () => {
             startTime,
             finishDate,
             finishTime,
-            (username = state.username)
+            owner,
+            checkStatus
+            //(username = state.username)
           );
         }}
       />
-    </ScrollView>
+    </>
   );
 };
 
-AddTaskForm.navigationOptions = () => {
-  return {
-    title: "Add Task",
-  };
-};
+const styles = StyleSheet.create({});
 
 export default AddTaskForm;
