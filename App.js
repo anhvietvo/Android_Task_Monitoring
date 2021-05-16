@@ -3,6 +3,8 @@ import React from "react";
 import { createAppContainer, createSwitchNavigator } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 import { createBottomTabNavigator } from "react-navigation-tabs";
+import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
 
 import LoginScreen from "./src/screens/AuthenScreens/LoginScreen";
 import InfoScreen from "./src/screens/InfoScreen";
@@ -21,6 +23,29 @@ import { Provider as TeamProvider } from "./src/context/TeamContext";
 import { Provider as TeamTaskProvider } from "./src/context/TeamTaskContext";
 import { setNavigator } from "./src/navigationRef";
 
+const personalFlow = createStackNavigator({
+  Personal: PersonalScreen,
+  Add: AddPersonalTask,
+});
+
+personalFlow.navigationOptions = {
+  title: "Personal",
+  tabBarIcon: <Ionicons name="person" size={20} />,
+};
+
+const teamFlow = createStackNavigator({
+  //Team: TeamScreen,
+  ManageTeams: ManageTeams,
+  CreateTeam: CreateTeam,
+  TeamTask: TeamTaskScreen,
+  Add: AddTeamTask,
+});
+
+teamFlow.navigationOptions = {
+  title: "Teams",
+  tabBarIcon: <FontAwesome name="group" size={20} />,
+};
+
 const switchNavigator = createSwitchNavigator({
   resolveAuth: ResolveAuthScreen,
   loginFlow: createStackNavigator({
@@ -28,17 +53,8 @@ const switchNavigator = createSwitchNavigator({
     Signup: SignupScreen,
   }),
   mainFlow: createBottomTabNavigator({
-    Personal: createStackNavigator({
-      Personal: PersonalScreen,
-      Add: AddPersonalTask,
-    }),
-    Team: createStackNavigator({
-      //Team: TeamScreen,
-      ManageTeams: ManageTeams,
-      CreateTeam: CreateTeam,
-      TeamTask: TeamTaskScreen,
-      Add: AddTeamTask,
-    }),
+    Personal: personalFlow,
+    Team: teamFlow,
     Info: InfoScreen,
   }),
 });

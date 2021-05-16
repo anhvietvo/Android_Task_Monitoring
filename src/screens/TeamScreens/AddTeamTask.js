@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import { Text, ScrollView } from "react-native";
+import { Text, ScrollView, Alert } from "react-native";
 import { Button, CheckBox, Divider, Input } from "react-native-elements";
 import { NavigationEvents } from "react-navigation";
 
@@ -46,12 +46,20 @@ const AddTeamTask = ({ navigation }) => {
         disabled={searchName.replace(/\s/g, "").length ? false : true}
         title="Add User"
         onPress={() => {
-          addUser(searchName, TID);
-          loadUser(TID);
+          if (username === manager) {
+            addUser(searchName, TID);
+            loadUser(TID);
+          } else {
+            Alert.alert("Only the team manager can add new members");
+          }
         }}
       />
       <Divider style={{ height: 3, marginVertical: 15 }} />
-      <AddTaskForm addTask={addTask} owner={{TID, username, manager}} checkStatus={checkStatus}>
+      <AddTaskForm
+        addTask={addTask}
+        owner={{ TID, username, manager }}
+        checkStatus={checkStatus}
+      >
         <Text style={{ fontSize: 20, paddingLeft: 15 }}>Allocated To:</Text>
         {state.employees.map((user) => {
           return (

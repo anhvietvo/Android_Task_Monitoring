@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
-import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
-
+import { Text, StyleSheet, TouchableOpacity } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-navigation";
 
 import { Context as AuthContext } from "../context/AuthContext";
@@ -25,6 +25,11 @@ const InfoScreen = () => {
       </TouchableOpacity>
     </SafeAreaView>
   );
+};
+
+InfoScreen.navigationOptions = {
+  title: "Settings",
+  tabBarIcon: <Ionicons name="settings-sharp" size={20} />,
 };
 
 const styles = StyleSheet.create({
