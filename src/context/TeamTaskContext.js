@@ -36,6 +36,7 @@ const reducer = (state, action) => {
                 finishDate: action.payload.finishDate,
                 finishTime: action.payload.finishTime,
                 status: action.payload.status,
+                allocateList: action.payload.allocateList,
               },
             ],
           },
@@ -125,35 +126,29 @@ const loadTask = (dispatch) => {
   return async (username, TID, manager) => {
     dispatch({ type: "clearTask" });
     try {
-      if (username === manager) {
-        const res = await axios.post("/team/task", { TID });
-        return res.data.map((row) => {
-          return dispatch({
-            type: "addTask",
-            payload: {
-              ...row,
-              startDate: row.startDate.slice(0, 10),
-              startTime: row.startTime.slice(0, 5),
-              finishDate: row.finishDate.slice(0, 10),
-              finishTime: row.finishTime.slice(0, 5),
-            },
-          });
+      const res =
+        username === manager
+          ? await axios.post("/team/task", { TID })
+          : await axios.post("/team/task", { username, TID });
+      return res.data.map(async (row) => {
+        // Get the array of username who do this task
+        const allocateList = await axios.post("/team/task/getAllocate", {
+          TTID: row.TTID,
         });
-      } else {
-        const res = await axios.post("/team/task", { username, TID });
-        return res.data.map((row) => {
-          return dispatch({
-            type: "addTask",
-            payload: {
-              ...row,
-              startDate: row.startDate.slice(0, 10),
-              startTime: row.startTime.slice(0, 5),
-              finishDate: row.finishDate.slice(0, 10),
-              finishTime: row.finishTime.slice(0, 5),
-            },
-          });
+        var allocateStr = "";
+        allocateList.data.map((user) => (allocateStr += user.username + "  "));
+        return dispatch({
+          type: "addTask",
+          payload: {
+            ...row,
+            startDate: row.startDate.slice(0, 10),
+            startTime: row.startTime.slice(0, 5),
+            finishDate: row.finishDate.slice(0, 10),
+            finishTime: row.finishTime.slice(0, 5),
+            allocateList: allocateStr,
+          },
         });
-      }
+      });
     } catch (err) {
       console.log(err);
     }
@@ -190,6 +185,8 @@ const addTask = (dispatch) => {
       console.log(res.data);
       // Check this task is belong to user who added or not
       var taskBelongsToAdder = false;
+      // Create the string of users who are allocated this task
+      var allocateList = "";
       await checkStatus.map((user) => {
         axios.post("/team/task/allocate", {
           TTID,
@@ -198,6 +195,7 @@ const addTask = (dispatch) => {
         if (user.username === owner.username) {
           taskBelongsToAdder = true;
         }
+        allocateList += user.username + "  ";
       });
       if (taskBelongsToAdder || owner.username == owner.manager) {
         dispatch({
@@ -212,6 +210,7 @@ const addTask = (dispatch) => {
             finishDate,
             finishTime,
             status,
+            allocateList: allocateList,
           },
         });
       }
@@ -306,7 +305,6 @@ export const { Provider, Context } = createDataContext(
     clearMsg,
     loadUser,
     setCheck,
-    addTask,
     addEmpty,
     clearEmpty,
     loadTask,
