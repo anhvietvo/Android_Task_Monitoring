@@ -34,10 +34,7 @@ const itemPressed = (item, deleteTask, canDelete) => {
   "PTID" in item ? (ID = item.PTID) : (ID = item.TTID);
   Alert.alert(
     item.title,
-    item.details
-      ? `Details: ${item.details}\n`
-      : "" +
-          `Start Date: ${item.startDate}\nStart Time: ${item.startTime}\nFinish Date: ${item.finishDate}\nFinish Time: ${item.finishTime}`,
+    `Details: ${item.details}\nStart Date: ${item.startDate}\nStart Time: ${item.startTime}\nFinish Date: ${item.finishDate}\nFinish Time: ${item.finishTime}`,
     [
       {
         text: "Cancel",
@@ -98,11 +95,16 @@ const renderItem = ({ item }, updateStatus, deleteTask, canDelete) => {
           <Text style={styles.itemDurationText}>Due: {diffDays} days</Text>
         )}
       </View>
-      <Text
-        style={[styles.itemTitleText, item.status ? styles.textDone : null]}
-      >
-        {item.title}
-      </Text>
+      <View style={styles.titleContainer}>
+        <Text
+          style={[styles.itemTitleText, item.status ? styles.textDone : null]}
+        >
+          {item.title}
+        </Text>
+        {"allocateList" in item ? (
+          <Text style={styles.allocateText}>{item.allocateList}</Text>
+        ) : null}
+      </View>
       <TouchableOpacity
         style={styles.itemButtonContainer}
         onPress={() => buttonPressed(item, updateStatus)}
@@ -185,21 +187,30 @@ const styles = StyleSheet.create({
   itemHourText: {
     color: "black",
     alignSelf: "center",
+    marginBottom: 6,
   },
   itemDurationText: {
     color: "grey",
     fontSize: 12,
-    marginTop: 4,
     alignSelf: "center",
     //marginLeft: 4,
   },
+  titleContainer: {
+    marginHorizontal: 16,
+    flex: 1,
+  },
   itemTitleText: {
     color: "black",
-    marginHorizontal: 16,
+    //marginHorizontal: 16,
     fontWeight: "bold",
     fontSize: 16,
-    flex: 1,
+    marginBottom: 4,
+    //flex: 1,
     //alignSelf: "center",
+  },
+  allocateText: {
+    color: "gray",
+    fontSize: 12,
   },
   itemButtonContainer: {
     //backgroundColor: "red",
