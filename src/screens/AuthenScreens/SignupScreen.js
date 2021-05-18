@@ -8,6 +8,7 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
+  Alert,
 } from "react-native";
 
 import { NavigationEvents } from "react-navigation";
@@ -88,7 +89,20 @@ const SignupScreen = ({ navigation }) => {
           <TouchableOpacity
             style={styles.btn}
             onPress={() => {
-              signup({ fullname, username, password });
+              if (
+                !(
+                  fullname.replace(/\s/g, "").length &&
+                  password.replace(/\s/g, "").length &&
+                  username.replace(/\s/g, "").length &&
+                  confirmPassword.replace(/\s/g, "").length
+                )
+              ) {
+                Alert.alert("You must confirm all terms are fulfilled");
+              } else if (password !== confirmPassword) {
+                Alert.alert("Your password did not match. Try again");
+              } else {
+                signup({ fullname, username, password });
+              }
             }}
           >
             <Text style={[styles.text, { fontWeight: "bold", fontSize: 20 }]}>

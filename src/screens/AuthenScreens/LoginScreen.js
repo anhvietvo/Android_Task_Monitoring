@@ -9,6 +9,7 @@ import {
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
   Keyboard,
+  Alert
 } from "react-native";
 
 import { NavigationEvents } from "react-navigation";
@@ -18,9 +19,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Context as AuthContext } from "../../context/AuthContext";
 
 const LoginScreen = ({ navigation }) => {
-  const { state, signin, clearErrorMessage } = useContext(
-    AuthContext
-  );
+  const { state, signin, clearErrorMessage } = useContext(AuthContext);
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -32,7 +31,10 @@ const LoginScreen = ({ navigation }) => {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.background}>
           <NavigationEvents onWillFocus={clearErrorMessage} />
-          <Image style={styles.img} source={require("../../../assets/logo.png")} />
+          <Image
+            style={styles.img}
+            source={require("../../../assets/logo.png")}
+          />
           <View style={styles.inputContainer}>
             <Feather name="user" style={styles.icon} color="#2E3191" />
             <TextInput
@@ -58,7 +60,12 @@ const LoginScreen = ({ navigation }) => {
           </View>
           <TouchableOpacity
             style={styles.btn}
-            onPress={() => signin({ username, password })}
+            onPress={() => {
+              username.replace(/\s/g, "").length &&
+              password.replace(/\s/g, "").length
+                ? signin({ username, password })
+                : Alert.alert("You must confirm all terms are fulfilled");
+            }}
           >
             <Text style={[styles.text, { fontSize: 20, alignSelf: "center" }]}>
               Log in
