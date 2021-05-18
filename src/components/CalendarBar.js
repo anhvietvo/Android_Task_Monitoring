@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import _ from "lodash";
 
 import { CalendarProvider, ExpandableCalendar } from "react-native-calendars";
@@ -23,7 +23,6 @@ const CalendarBar = ({ marked, children, addEmpty }) => {
   return (
     <CalendarProvider
       date={today}
-      showTodayButton
       onDateChanged={(date) => {
         if (_.isEmpty(marked.find(item => item.title === date))) {
           addEmpty(date);

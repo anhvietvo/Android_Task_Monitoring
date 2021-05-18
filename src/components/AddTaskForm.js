@@ -1,4 +1,4 @@
-import React, { useReducer, useContext, useState } from "react";
+import React, { useReducer, useState } from "react";
 import { Text, StyleSheet } from "react-native";
 
 import { Input, Button } from "react-native-elements";

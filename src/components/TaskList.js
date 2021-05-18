@@ -64,14 +64,12 @@ const renderItem = ({ item }, updateStatus, deleteTask, canDelete) => {
     );
   }
 
-  const now = new Date();
   const finishDate = new Date(item.finishDate);
+  const now = new Date();
+  const diffTime = finishDate.getTime() - now.getTime();
   var diffDays;
-  const diff = (finish, now) => {
-    return finish - now;
-  };
-  if ((diffTime = diff(finishDate, now) >= 0)) {
-    diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  if (diffTime >= 0) {
+    diffDays = Math.floor(diffTime / (1000 * 3600 * 24));
   } else {
     diffDays = -1;
   }
@@ -81,7 +79,7 @@ const renderItem = ({ item }, updateStatus, deleteTask, canDelete) => {
       onPress={() => itemPressed(item, deleteTask, canDelete)}
       style={styles.item}
     >
-      <View style={{ width: 65 }}>
+      <View style={{ width: 75 }}>
         <Text
           style={[styles.itemHourText, item.status ? styles.textDone : null]}
         >

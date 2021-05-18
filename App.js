@@ -5,6 +5,7 @@ import { createStackNavigator } from "react-navigation-stack";
 import { createBottomTabNavigator } from "react-navigation-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
+import { LogBox } from 'react-native';
 
 import LoginScreen from "./src/screens/AuthenScreens/LoginScreen";
 import InfoScreen from "./src/screens/InfoScreen";
@@ -22,6 +23,9 @@ import { Provider as TaskProvider } from "./src/context/TaskContext";
 import { Provider as TeamProvider } from "./src/context/TeamContext";
 import { Provider as TeamTaskProvider } from "./src/context/TeamTaskContext";
 import { setNavigator } from "./src/navigationRef";
+
+// Ignore log notification by message:
+LogBox.ignoreLogs(['Warning: ...']);
 
 const personalFlow = createStackNavigator({
   Personal: PersonalScreen,
