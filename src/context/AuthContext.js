@@ -13,11 +13,16 @@ const authReducer = (state, action) => {
         errorMessage: "",
         token: action.payload.token,
         username: action.payload.username,
+        fullname: action.payload.fullname,
       };
     case "clear_err_msg":
       return { ...state, errorMessage: "" };
     case "signout":
       return { token: null, errorMessage: "", username: "" };
+    case "add_update_msg":
+      return { ...state, updateMsg: action.payload };
+    case "clear_update_msg":
+      return { ...state, updateMsg: "" };
     default:
       return state;
   }
@@ -35,7 +40,14 @@ const tryLocalSignin = (dispatch) => async () => {
         Authorization: `Bearer ${token}`,
       },
     });
-    dispatch({ type: "signin", payload: { token, username: res.data } });
+    dispatch({
+      type: "signin",
+      payload: {
+        token,
+        username: res.data.username,
+        fullname: res.data.fullname,
+      },
+    });
     navigate("Personal");
   } else {
     navigate("loginFlow");
@@ -57,7 +69,11 @@ const signin = (dispatch) => {
       await AsyncStorage.setItem("token", res.data.token);
       dispatch({
         type: "signin",
-        payload: { token: res.data.token, username },
+        payload: {
+          token: res.data.token,
+          username,
+          fullname: res.data.fullname,
+        },
       });
       navigate("Personal");
     } catch (err) {
@@ -84,8 +100,31 @@ const signup = (dispatch) => async ({ fullname, username, password }) => {
   }
 };
 
+const updatePassword = (dispatch) => async (username, newPass) => {
+  try {
+    const res = await axios.post("/password", { username, newPass });
+    console.log(res.data);
+    dispatch({ type: "add_update_msg", payload: res.data });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const clearUpdateMsg = (dispatch) => () => {
+  dispatch({ type: "clear_update_msg" });
+};
+
 export const { Provider, Context } = createDataContext(
   authReducer,
-  { signin, signout, signup, clearErrorMessage, tryLocalSignin, signout },
-  { token: null, errorMessage: "", username: "" }
+  {
+    signin,
+    signout,
+    signup,
+    clearErrorMessage,
+    tryLocalSignin,
+    signout,
+    updatePassword,
+    clearUpdateMsg,
+  },
+  { token: null, errorMessage: "", username: "", fullname: "", updateMsg: "" }
 );
