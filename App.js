@@ -25,7 +25,7 @@ import { Provider as TeamTaskProvider } from "./src/context/TeamTaskContext";
 import { setNavigator } from "./src/navigationRef";
 
 // Ignore log notification by message:
-LogBox.ignoreLogs(['Warning: ...']);
+LogBox.ignoreAllLogs();
 
 const personalFlow = createStackNavigator({
   Personal: PersonalScreen,
