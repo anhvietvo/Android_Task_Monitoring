@@ -100,10 +100,10 @@ const reducer = (state, action) => {
       });
       return { ...state };
     case "loadUser":
-      // Clear employees before load from db
+      // Clear smployees before load from db
       state.employees = [];
       action.payload.map((user) => {
-        state.employees.push({ username: user.username, check: false });
+        state.employees.push({ username: user.username, UID: user.UID, check: false });
       });
       return { ...state };
     case "addMsg":
@@ -123,13 +123,13 @@ const clearMsg = (dispatch) => () => {
 
 // Load Task from db to TeamTaskScreen
 const loadTask = (dispatch) => {
-  return async (username, TID, manager) => {
+  return async (UID, TID, manager) => {
     dispatch({ type: "clearTask" });
     try {
       const res =
-        username === manager
+        UID === manager
           ? await axios.post("/team/task", { TID })
-          : await axios.post("/team/task", { username, TID });
+          : await axios.post("/team/task", { UID, TID });
       return res.data.map(async (row) => {
         // Get the array of username who do this task
         const allocateList = await axios.post("/team/task/getAllocate", {
@@ -190,14 +190,14 @@ const addTask = (dispatch) => {
       await checkStatus.map((user) => {
         axios.post("/team/task/allocate", {
           TTID,
-          username: user.username,
+          UID: user.UID,
         });
         if (user.username === owner.username) {
           taskBelongsToAdder = true;
         }
         allocateList += user.username + "  ";
       });
-      if (taskBelongsToAdder || owner.username == owner.manager) {
+      if (taskBelongsToAdder || owner.UID === owner.manager) {
         dispatch({
           type: "addTask",
           payload: {

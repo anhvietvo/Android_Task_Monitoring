@@ -22,10 +22,10 @@ const TeamTaskScreen = ({ navigation }) => {
   const team = navigation.state.params;
   const TID = team.TID;
   const manager = team.manager;
-  const username = useContext(AuthContext).state.username;
+  const UID = useContext(AuthContext).state.UID;
 
   useEffect(() => {
-    loadTask(username, TID, manager);
+    loadTask(UID, TID, manager);
   }, []);
 
   const sortedState = state.task
@@ -41,11 +41,11 @@ const TeamTaskScreen = ({ navigation }) => {
       <NavigationEvents onWillFocus={clearEmpty} />
       <CalendarBar marked={sortedState} addEmpty={addEmpty}>
         <TaskList
-          refresh={() => loadTask(username, TID, manager)}
+          refresh={() => loadTask(UID, TID, manager)}
           sortedState={sortedState}
           updateStatus={updateStatus}
           deleteTask={deleteTask}
-          canDelete={manager == username}
+          canDelete={manager === UID}
         />
       </CalendarBar>
       <FAB

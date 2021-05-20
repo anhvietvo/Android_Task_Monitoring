@@ -61,12 +61,12 @@ const addTeam = (dispatch) => {
 
 // TODO: Load team from db
 const loadTeam = (dispatch) => {
-  return async (username) => {
+  return async (UID) => {
     dispatch({ type: "clearTeam" });
     try {
       // Load team from Teams-schema INNER JOIN with Employees-schema
       const res = await axios.post("/team", {
-        username,
+        UID,
       });
 
       res.data.map((team) => {

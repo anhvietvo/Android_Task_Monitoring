@@ -12,7 +12,7 @@ const AddPersonalTask = () => {
 
   return (
     <ScrollView>
-      <AddTaskForm addTask={addTask} owner={state.username} />
+      <AddTaskForm addTask={addTask} owner={state.UID} />
     </ScrollView>
   );
 };

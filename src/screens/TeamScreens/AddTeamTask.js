@@ -18,6 +18,7 @@ const AddTeamTask = ({ navigation }) => {
   );
 
   const username = useContext(AuthContext).state.username;
+  const UID = useContext(AuthContext).state.UID;
 
   const [searchName, setSearchName] = useState("");
 
@@ -46,7 +47,7 @@ const AddTeamTask = ({ navigation }) => {
         disabled={searchName.replace(/\s/g, "").length ? false : true}
         title="Add User"
         onPress={() => {
-          if (username === manager) {
+          if (UID === manager) {
             addUser(searchName, TID);
             loadUser(TID);
           } else {
@@ -57,7 +58,7 @@ const AddTeamTask = ({ navigation }) => {
       <Divider style={{ height: 3, marginVertical: 15 }} />
       <AddTaskForm
         addTask={addTask}
-        owner={{ TID, username, manager }}
+        owner={{ TID, username, manager, UID }}
         checkStatus={checkStatus}
       >
         <Text style={{ fontSize: 20, paddingLeft: 15 }}>Allocated To:</Text>

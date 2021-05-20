@@ -84,7 +84,7 @@ const InfoScreen = () => {
                 } else if (newPassword !== confirmPassword) {
                   Alert.alert("Your password did not match. Try again");
                 } else {
-                  updatePassword(state.username, newPassword);
+                  updatePassword(state.UID, newPassword);
                   setNewPassword("");
                   setConfirmPassword("");
                 }

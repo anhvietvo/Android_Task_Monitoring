@@ -18,7 +18,7 @@ const CreateTeam = () => {
       <Input placeholder="Details" value={details} onChangeText={setDetails} />
       <Button
         title="Create"
-        onPress={() => addTeam(name, details, state.username)}
+        onPress={() => addTeam(name, details, state.UID)}
       />
     </View>
   );

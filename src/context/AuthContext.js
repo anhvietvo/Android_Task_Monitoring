@@ -14,11 +14,18 @@ const authReducer = (state, action) => {
         token: action.payload.token,
         username: action.payload.username,
         fullname: action.payload.fullname,
+        UID: action.payload.UID
       };
     case "clear_err_msg":
       return { ...state, errorMessage: "" };
     case "signout":
-      return { token: null, errorMessage: "", username: "" };
+      return {
+        token: null,
+        errorMessage: "",
+        username: "",
+        fullname: "",
+        UID: null
+      };
     case "add_update_msg":
       return { ...state, updateMsg: action.payload };
     case "clear_update_msg":
@@ -35,20 +42,25 @@ const clearErrorMessage = (dispatch) => () => {
 const tryLocalSignin = (dispatch) => async () => {
   const token = await AsyncStorage.getItem("token");
   if (token) {
-    const res = await axios.get("/", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    dispatch({
-      type: "signin",
-      payload: {
-        token,
-        username: res.data.username,
-        fullname: res.data.fullname,
-      },
-    });
-    navigate("Personal");
+    try {
+      const res = await axios.get("/", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      dispatch({
+        type: "signin",
+        payload: {
+          token,
+          username: res.data.username,
+          fullname: res.data.fullname,
+          UID: res.data.UID,
+        },
+      });
+      navigate("Personal");
+    } catch (err) {
+      navigate("loginFlow");
+    }
   } else {
     navigate("loginFlow");
   }
@@ -73,6 +85,7 @@ const signin = (dispatch) => {
           token: res.data.token,
           username,
           fullname: res.data.fullname,
+          UID: res.data.UID,
         },
       });
       navigate("Personal");
@@ -100,9 +113,9 @@ const signup = (dispatch) => async ({ fullname, username, password }) => {
   }
 };
 
-const updatePassword = (dispatch) => async (username, newPass) => {
+const updatePassword = (dispatch) => async (UID, newPass) => {
   try {
-    const res = await axios.post("/password", { username, newPass });
+    const res = await axios.post("/password", { UID, newPass });
     console.log(res.data);
     dispatch({ type: "add_update_msg", payload: res.data });
   } catch (err) {
@@ -126,5 +139,12 @@ export const { Provider, Context } = createDataContext(
     updatePassword,
     clearUpdateMsg,
   },
-  { token: null, errorMessage: "", username: "", fullname: "", updateMsg: "" }
+  {
+    token: null,
+    errorMessage: "",
+    username: "",
+    fullname: "",
+    updateMsg: "",
+    UID: null
+  }
 );

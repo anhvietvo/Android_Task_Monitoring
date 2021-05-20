@@ -27,14 +27,14 @@ const ManageTeams = ({ navigation }) => {
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     wait(2000).then(() => {
-      loadTeam(authContext.state.username);
+      loadTeam(authContext.state.UID);
       setRefreshing(false);
     });
   }, []);
 
   // Load Team in db to render every time ManageTeams Screen re-render
   useEffect(() => {
-    loadTeam(authContext.state.username);
+    loadTeam(authContext.state.UID);
   }, []);
 
   return (

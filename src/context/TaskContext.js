@@ -152,10 +152,10 @@ const deleteTask = (dispatch) => {
 };
 
 const loadTask = (dispatch) => {
-  return async (username) => {
+  return async (UID) => {
     dispatch({ type: "clearTask" });
     try {
-      const res = await axios.post("/personal", { username });
+      const res = await axios.post("/personal", { UID });
       return res.data.map((row) => {
         return dispatch({
           type: "addTask",

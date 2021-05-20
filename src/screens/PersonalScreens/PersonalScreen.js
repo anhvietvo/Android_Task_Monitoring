@@ -23,14 +23,14 @@ const PersonalScreen = ({ navigation }) => {
   });
 
   useEffect(() => {
-    loadTask(authContext.state.username);
+    loadTask(authContext.state.UID);
   }, []);
 
   return (
     <SafeAreaView forceInset={{ top: "always" }} style={{ flex: 1 }}>
       <CalendarBar marked={sortedState} addEmpty={addEmpty}>
         <TaskList
-          refresh={() => loadTask(authContext.state.username)}
+          refresh={() => loadTask(authContext.state.UID)}
           sortedState={sortedState}
           updateStatus={updateStatus}
           deleteTask={deleteTask}
