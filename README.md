@@ -29,4 +29,4 @@ Finally, you can launch the app with Expo by
 At that time, a new window will appear on your web browser. You can use your phone to scan the QR code and try out Android Task Monitoring project.
 
 ## More Information
-You can find ER Diagrams, relational database, reports, and some screenshots in the folder Report. This folder contains all our documents for this project. If you want to take an overview, you should start here.
+You can find ER Diagrams, relational database, reports, and some screenshots in the folder report. This folder contains all our documents for this project. If you want to take an overview, you should start here.
